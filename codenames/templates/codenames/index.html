@@ -1,0 +1,34 @@
+{% extends "polls/layout.html" %}
+
+{% block body %}
+
+{% if error_message %}
+  {{error_message}}
+{% endif %}
+
+<div class="container">
+  <form id="vote-form" action="{% url 'polls:vote' %}" method="post">
+  {% csrf_token %}
+  <div class="row waffle-box">
+    <div class="col-md-6">
+      <div class="row text-center" >
+        {{ waffles.0.name }} {{ waffles.0.id }}
+      </div>
+      <div id="left" class="row choice text-center" data-id="{{ waffles.0.id }}">
+        <img class="image-choice" src="{{ waffles.0.image_url }}" />
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="row text-center" >
+        {{ waffles.1.name }} {{ waffles.1.id }}
+      </div>
+      <div id="right" class="row choice text-center" data-id="{{ waffles.1.id }}">
+        <img class="image-choice" src="{{ waffles.1.image_url }}" />
+      </div>
+    </div>
+	</form>
+  <div id="test">
+  </div>
+
+</div>
+{% endblock %}

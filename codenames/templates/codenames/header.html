@@ -1,0 +1,24 @@
+{% load staticfiles %}
+<div class="container page-header-wrapper">
+  <div class="col-md-4 waffle-logo">
+    <img src="{% static 'polls/images/waffle.png' %}" height="104px" />
+  </div>
+  <ul class="nav nav-tabs">
+    <li role="presentation" ><a href="{% url 'polls:index' %}">Home</a></li>
+    <li role="presentation" ><a href="{% url 'polls:profile' %}">Profile</a></li>
+    <li role="presentation" ><a href="{% url 'polls:top' %}">Top Voted</a></li>
+    <li role="presentation" ><a href="{% url 'polls:create' %}">Create</a></li>
+    <li role="presentation" >
+      {% if user.is_anonymous %}
+        <a href="{% url 'polls:login' %}">Login</a>
+      {% else %}
+        <a href="{% url 'polls:logout' %}">Logout</a>
+      {% endif %}
+      </a>
+    </li>
+    <li role="presentation" ><a href="/polls/register/">Register</a></li>
+  </ul>
+	<div class="row text-center">
+    User: {{ user }}
+  </div>
+</div>
