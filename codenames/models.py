@@ -19,10 +19,16 @@ class Word(models.Model):
         return self.text
 
 
+RED = 0
+BLUE = 1
+GREY = 2
+BLACK = 3
+COLORS = ((RED, 'Red'), (BLUE, 'Blue'), (GREY, 'Grey'), (BLACK, 'Black'))
+
 class Card(models.Model):
     word = models.ForeignKey(Word)
-    color = pg_fields.ArrayField(models.IntegerField())
     chosen = models.BooleanField(default=False)
+    colors = models.SmallIntegerField(choices=COLORS, default=GREY)
 
     def __unicode__(self):
         return self.word
