@@ -2,6 +2,7 @@ import hashlib
 import time
 from django.db import models
 from django.contrib.auth.models import User
+import django.contrib.postgres.fields as pg_fields
 
 
 def _createHash():
@@ -20,19 +21,11 @@ class Word(models.Model):
 
 class Card(models.Model):
     word = models.ForeignKey(Word)
-    color = models.ArrayField(models.IntegerField())
+    color = pg_fields.ArrayField(models.IntegerField())
     chosen = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.word
-
-
-class Board(models.model):
-    game = models.ForeignKey('Game')
-    cards = models.ManyToManyField(Card)
-
-    def __unicode__(self):
-        return self.game
 
 
 class Game(models.Model):
@@ -43,7 +36,7 @@ class Game(models.Model):
     blue_giver = models.ForeignKey(User, related_name='blue_giver', default=1)
     blue_guesser = models.ForeignKey(User, related_name='blue_guesser', default=1)
     started_date = models.DateTimeField('date started', auto_now_add=True)
-    board = models.ForeignKey(Board)
+    cards = models.ManyToManyField(Card)
 
     def __unicode__(self):
         return self.url
