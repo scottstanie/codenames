@@ -1,4 +1,4 @@
-{% extends "polls/layout.html" %}
+{% extends "codenames/layout.html" %}
 
 {% block body %}
 
@@ -7,23 +7,23 @@
 {% endif %}
 
 <div class="container">
-  <form id="vote-form" action="{% url 'polls:vote' %}" method="post">
+  <form id="vote-form" action="{% url 'codenames:vote' %}" method="post">
   {% csrf_token %}
   <div class="row waffle-box">
     <div class="col-md-6">
       <div class="row text-center" >
-        {{ waffles.0.name }} {{ waffles.0.id }}
+        {{ words.0.name }} {{ words.0.id }}
       </div>
-      <div id="left" class="row choice text-center" data-id="{{ waffles.0.id }}">
-        <img class="image-choice" src="{{ waffles.0.image_url }}" />
+      <div id="left" class="row choice text-center" data-id="{{ words.0.id }}">
+        <img class="image-choice" src="{{ words.0.image_url }}" />
       </div>
     </div>
     <div class="col-md-6">
       <div class="row text-center" >
-        {{ waffles.1.name }} {{ waffles.1.id }}
+        {{ words.1.name }} {{ words.1.id }}
       </div>
-      <div id="right" class="row choice text-center" data-id="{{ waffles.1.id }}">
-        <img class="image-choice" src="{{ waffles.1.image_url }}" />
+      <div id="right" class="row choice text-center" data-id="{{ words.1.id }}">
+        <img class="image-choice" src="{{ words.1.image_url }}" />
       </div>
     </div>
 	</form>
