@@ -14,12 +14,11 @@ from .models import Card
 def index(request):
     with open('./codenames/data.json', 'rb') as word_file:
         full_words = json.load(word_file)
-        random.shuffle([1,2,3])
         random.shuffle(full_words)
-        words = full_words[:25]
+        word_rows= [full_words[i:i + 5] for i in range(0, 25, 5)]
 
     context = {
-        'words': words
+        'word_rows': word_rows
     }
     return render(request, 'codenames/index.html', context)
 

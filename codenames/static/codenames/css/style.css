@@ -1,4 +1,6 @@
-.card{
-  margin: 1em;
-  border: 1em;
+.word-card{
+  margin: 3px;
+  border: 2px solid navy;
+  font-size: 1.5em;
+  cursor: pointer;
 }

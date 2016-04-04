@@ -4,18 +4,7 @@
     <img src="{% static 'codenames/images/waffle.png' %}" height="104px" />
   </div>
   <ul class="nav nav-tabs">
-    <li role="presentation" ><a href="{% url 'codenames:index' %}">Home</a></li>
-    <li role="presentation" >
-      {% if user.is_anonymous %}
-        <a href="{% url 'codenames:login' %}">Login</a>
-      {% else %}
-        <a href="{% url 'codenames:logout' %}">Logout</a>
-      {% endif %}
-      </a>
-    </li>
+    <li role="presentation" ><a href="{% url 'index' %}">Home- New Game</a></li>
     <li role="presentation" ><a href="/codenames/register/">Register</a></li>
   </ul>
-	<div class="row text-center">
-    User: {{ user }}
-  </div>
 </div>

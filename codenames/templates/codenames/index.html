@@ -7,28 +7,15 @@
 {% endif %}
 
 <div class="container">
-  <form id="vote-form" action="{% url 'codenames:vote' %}" method="post">
-  {% csrf_token %}
-  <div class="row waffle-box">
-    <div class="col-md-6">
-      <div class="row text-center" >
-        {{ words.0.name }} {{ words.0.id }}
-      </div>
-      <div id="left" class="row choice text-center" data-id="{{ words.0.id }}">
-        <img class="image-choice" src="{{ words.0.image_url }}" />
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="row text-center" >
-        {{ words.1.name }} {{ words.1.id }}
-      </div>
-      <div id="right" class="row choice text-center" data-id="{{ words.1.id }}">
-        <img class="image-choice" src="{{ words.1.image_url }}" />
-      </div>
-    </div>
-	</form>
-  <div id="test">
+  {% for word_row in word_rows %}
+  <div class="row text-center word-row" >
+    {% for word in word_row %}
+      <div class="col-md-2 word-card">{{word}}</div>
+    {% endfor %}
   </div>
+  {% endfor %}
+<div id="test">
+</div>
 
 </div>
 {% endblock %}
