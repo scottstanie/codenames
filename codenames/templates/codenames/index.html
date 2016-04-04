@@ -10,7 +10,7 @@
   {% for word_row in word_rows %}
   <div class="row text-center word-row" >
     {% for word in word_row %}
-    <div id="word{{word.id}}" class="col-md-2 word-card">{{word.text}}</div>
+    <div id="word{{word.id}}" class="col-md-2 word-card" style="background-color:{{word.color}};">{{word.text}}</div>
     {% endfor %}
   </div>
   {% endfor %}
