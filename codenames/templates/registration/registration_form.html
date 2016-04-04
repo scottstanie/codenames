@@ -1,4 +1,4 @@
-{% extends "polls/layout.html" %}
+{% extends "codenames/layout.html" %}
 
 {% block body %}
 
@@ -6,7 +6,7 @@
 <p>Your username and password didn't match. Please try again.</p>
 {% endif %}
 
-<form method="post" action="/polls/register/">
+<form method="post" action="/register/">
   {% csrf_token %}
   {{form.as_p}}
   <input type="submit" value="Register" />

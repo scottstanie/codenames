@@ -41,3 +41,13 @@ def vote(request):
         # Always return an HttpResponseRedirect after successfully dealing with POST data. This prevents data from being posted twice if a user hits the back button
         print 'winner: ', winner_id
         return HttpResponseRedirect(reverse('codenames:index', kwargs={'winner_id': winner.id}))
+
+
+@login_required
+def profile(request):
+    u = request.user
+    top_waffles = Item.objects.filter(created_by_id=u.id).order_by('-added_date')
+    context = {
+        'waffles': top_waffles
+    }
+    return render(request, 'polls/profile.html', context)
