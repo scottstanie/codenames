@@ -12,16 +12,7 @@ from .models import Card, Game, Word, Clue
 
 
 def index(request):
-    with open('./codenames/data.json', 'rb') as word_file:
-        colors = ['red', 'blue']
-        full_words = json.load(word_file)
-        random.shuffle(full_words)
-        word_context = [{'id': idx, 'text': word, 'color': random.choice(colors)} for idx, word in enumerate(full_words[:25])]
-        word_rows = [word_context[i:i + 5] for i in range(0, 25, 5)]
-
-    context = {
-        'word_rows': word_rows
-    }
+    context = {}
     return render(request, 'codenames/index.html', context)
 
 

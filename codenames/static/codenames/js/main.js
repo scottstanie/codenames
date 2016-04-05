@@ -44,16 +44,11 @@ $(document).ready(function(){
     }});
   });
 
-  $(".image-choice-container").click(function() {
+  $(".word-card").click(function() {
     // Set only current div active
-    $(".image-choice-container").removeClass("active");
+    $(".word-card").removeClass("active");
     $(this).addClass("active");
 
-    // Get the src of the child img
-    var image_url = $(this).children().first().attr('src');
-
-    // Set to form input
-    $("#id_image_url").val(image_url);
   });
 
   $("#search-text").keyup(function(e) {
