@@ -24,7 +24,7 @@ def game(request, unique_id):
             'error_message': "This game doesn't exist.",
         })
 
-    cards = current_game.cards.order_by('pk')
+    cards = current_game.card_set.order_by('pk')
     word_context = [{'id': idx, 'text': card.word.text, 'color': card.color }
                 for idx, card in enumerate(cards)]
     word_rows = [word_context[i:i + 5] for i in range(0, 25, 5)]
@@ -45,8 +45,8 @@ class GameCreate(CreateView):
         return super(GameCreate, self).form_valid(form)
 
     def get_success_url(self):
-        cards = generate_board()
-        self.object.cards.add(*cards)
+        cards = generate_board(self.object)
+        # self.object.cards.add(*cards)
         return reverse('game', kwargs={'unique_id': self.object.unique_id})
 
 
@@ -73,10 +73,10 @@ def generate_colors():
     return colors
 
 
-def generate_board():
+def generate_board(game):
     words = list(Word.objects.order_by('?')[:25])
     colors = generate_colors()
-    cards = [Card(word=w, color=colors[idx]) for idx, w in enumerate(words)]
+    cards = [Card(word=w, color=colors[idx], game=game) for idx, w in enumerate(words)]
     for c in cards:
         c.save()
     return cards
