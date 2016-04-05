@@ -24,8 +24,8 @@ def game(request, unique_id):
             'error_message': "This game doesn't exist.",
         })
 
-    cards = current_game.cards.all()
-    word_context = [{'id': idx, 'text': card.word.text, 'color': card.color } 
+    cards = current_game.cards.order_by('pk')
+    word_context = [{'id': idx, 'text': card.word.text, 'color': card.color }
                 for idx, card in enumerate(cards)]
     word_rows = [word_context[i:i + 5] for i in range(0, 25, 5)]
 
@@ -80,6 +80,7 @@ def generate_board():
     for c in cards:
         c.save()
     return cards
+
 
 def move(request):
     choice_text = request.POST['text']
