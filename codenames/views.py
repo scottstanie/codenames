@@ -8,7 +8,7 @@ from itertools import chain
 import json
 import random
 
-from .models import Card
+from .models import Card, Game, Word, Clue
 
 
 def index(request):
@@ -24,6 +24,29 @@ def index(request):
     }
     return render(request, 'codenames/index.html', context)
 
+
+class GameCreate(CreateView):
+    model = Game
+    fields = ['red_giver', 'red_guesser', 'blue_giver', 'blue_guesser']
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super(GameCreate, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('game', kwargs={'unique_id': self.object.unique_id})
+
+
+def game(request, unique_id):
+    return render(request, 'codenames/index.html')
+
+
+def generate_colors():
+    pass
+
+
+def generate_board():
+    return
 
 def vote(request):
     try:
@@ -50,4 +73,4 @@ def profile(request):
     context = {
         'waffles': top_waffles
     }
-    return render(request, 'polls/profile.html', context)
+    return render(request, 'codenames/profile.html', context)

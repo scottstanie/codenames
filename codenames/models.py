@@ -19,19 +19,17 @@ class Word(models.Model):
         return self.text
 
 
-RED = 0
-BLUE = 1
-GREY = 2
-BLACK = 3
-COLORS = ((RED, 'Red'), (BLUE, 'Blue'), (GREY, 'Grey'), (BLACK, 'Black'))
-
 class Card(models.Model):
     word = models.ForeignKey(Word)
     chosen = models.BooleanField(default=False)
-    colors = models.SmallIntegerField(choices=COLORS, default=GREY)
+    color = models.CharField(
+        max_length=5,
+        choices=(('red', 'red'), ('blue', 'blue'), ('grey', 'grey'), ('black', 'black')),
+        default='grey'
+    )
 
     def __unicode__(self):
-        return self.word
+        return '%s: %s' % (str(self.word), self.color)
 
 
 class Game(models.Model):
@@ -45,7 +43,7 @@ class Game(models.Model):
     cards = models.ManyToManyField(Card)
 
     def __unicode__(self):
-        return self.url
+        return self.unique_id
 
 
 class Clue(models.Model):
