@@ -3,6 +3,9 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView
+from django.contrib.auth.models import User
+from django.views.decorators.http import require_http_methods
+
 
 from collections import Counter
 from itertools import chain, cycle
@@ -10,6 +13,7 @@ import json
 import random
 
 from .models import Card, Game, Word, Clue
+from django.contrib.auth.models import User
 
 
 def index(request):
@@ -96,23 +100,40 @@ def generate_board(game):
     return cards
 
 
+def find_next_turn(game):
+    turn_cycle = cycle(t[0] for t in models.TURN_STATES)
+    t = turn_cycle.next()
+    while t != self.current_turn:
+        t = turn_cycle.next()
+    return t
+
+
+@require_http_methods(["POST"])
 def move(request):
-    choice_text = request.POST['text']
-    color = request.POST['color']
+    text = request.POST['text']
     unique_id = request.POST['game_id']
-    try:
-        game = get_object_or_404(Game, unique_id=unique_id)
-        word = get_object_or_404(Word, text=choice_text)
-        card = get_object_or_404(Card, word=word, color=color, game=game)
-    except (KeyError, Card.DoesNotExist):
-        return render(request, 'codenames/index.html', {
-            'error_message': "You didn't select a choice.",
-        })
-    else:
+    req_type = request.POST['type']
+    player = request.POST['player']
+
+    game = get_object_or_404(Game, unique_id=unique_id)
+    user = get_object_or_404(User, username=player)
+
+    if req_type == 'guess':
+        color = request.POST['color']
+        word = get_object_or_404(Word, text=text)
+        card = get_object_or_404(Card, word=word, game=game)
+        guess = Guess(user=user, guesser_team=color, game=game, card=card)
+        guess.save()
         card.chosen = True
         card.save()
-        # Always return an HttpResponseRedirect after successfully dealing with POST data. This prevents data from being posted twice if a user hits the back button
-        return HttpResponseRedirect(reverse('game', args=(unique_id,)))
+    else:
+        count = request.POST['count']
+        clue = Clue(word=text, number=count, giver=user, game=game)
+        clue.save()
+        game.current_turn = find_next_turn(game)
+        game.save()
+    # Always return an HttpResponseRedirect after successfully dealing with POST data. This prevents data from being posted twice if a user hits the back button
+    return HttpResponseRedirect(reverse('game', args=(unique_id,)))
 
 
 @login_required

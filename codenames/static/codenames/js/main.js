@@ -11,14 +11,15 @@ $(document).ready(function(){
   });
 
 
-  $('body').on('click', '#submit', function(e) {
+  $('body').on('click', '#submit-guess', function(e) {
     var $wordChoice = $('.active.word-card');
     var text = $wordChoice.text();
     var color = $wordChoice.data('color');
     var game_id = location.pathname.split('/')[2];
+    var $player = $('#player').text();
     var $posting = $.post(
-      '/move/', 
-      {text: text, color: color, game_id: game_id} 
+      '/move/',
+      {type: "guess", text: text, color: color, game_id: game_id, player: $player}
     );
     $posting.done(function(data) {
       window.location.reload();
@@ -33,11 +34,34 @@ $(document).ready(function(){
 
   });
 
-  $("#search-text").keyup(function(e) {
+  $("#clue-text").keyup(function(e) {
     // On hitting enter:
     if (e.keyCode == 13) {
-      $("#submit-search").click();
+      $("#submit-clue").click();
     }
+  });
+
+  $('body').on('click', '#submit-clue', function(e) {
+    var $cardCount = $('#card-count').find(":selected").text();
+    var $clueText = $('#clue-text').val();
+    var $player = $('#player').text();
+    if($clueText === "") {
+      alert("Please enter a clue!");
+      return false
+    }
+    var game_id = location.pathname.split('/')[2];
+    var $posting = $.post(
+      '/move/', {
+        type: "clue",
+        text: $clueText,
+        count: $cardCount,
+        game_id: game_id,
+        player: $player
+      }
+    );
+    $posting.done(function(data) {
+      window.location.reload();
+    });
   });
 
 });

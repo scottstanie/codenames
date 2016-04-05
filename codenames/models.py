@@ -1,4 +1,5 @@
 import hashlib
+from itertools import cycle
 import time
 from django.db import models
 from django.contrib.auth.models import User
@@ -54,7 +55,6 @@ class Game(models.Model):
             'red_guess': self.red_guesser
         }
         return player_map[self.current_turn]
-
 
     def __unicode__(self):
         return self.unique_id

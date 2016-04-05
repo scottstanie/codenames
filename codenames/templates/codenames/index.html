@@ -9,7 +9,7 @@
 <div class="container">
   <h3>{{current_turn}}</h3>
   {% if user == current_player %}
-    <h4>Your move, {{current_player}}! </h4>
+  <h4>Your move, <span id="player">{{current_player}}</span>! </h4>
   {% else %}
     <h4>Waiting on {{current_player}}</h4>
   {% endif %}
@@ -29,9 +29,9 @@
   {% if user == current_player %}
     {% if 'give' in current_turn %}
     <div class="input-group">
-      <input id="clue-submit" type="text" class="form-control" placeholder="My Clue">
+      <input id="clue-text" type="text" class="form-control" placeholder="My Clue">
       <span class="input-group-btn">
-        <button class="btn btn-default" type="button">Go!</button>
+        <button id="submit-clue" class="btn btn-default" type="button">Give clue!</button>
       </span>
     </div><!-- /input-group -->
     Number of cards:
@@ -50,7 +50,7 @@
     </select>
     {% else %}
       <div class="row text-center" >
-        <button id="submit" class="btn btn-lg">Submit Guess</button>
+        <button id="submit-guess" class="btn btn-lg">Submit Guess</button>
       </div>
     {% endif %}
   {% endif %}
@@ -69,7 +69,7 @@
       {% for color, team in players.items %}
       <div class="row">
       <strong>{{color}}</strong>
-        {% for player in team %} 
+        {% for player in team %}
           {{player}}
         {% endfor %}
       </div>
