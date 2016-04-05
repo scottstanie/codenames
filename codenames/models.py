@@ -45,6 +45,17 @@ class Game(models.Model):
     def all_players(self):
         return self.red_team() + self.blue_team()
 
+    def current_player(self):
+        '''Maps current_turn option to a User'''
+        player_map = {
+            'blue_give': self.blue_giver,
+            'blue_guess': self.blue_guesser,
+            'red_give': self.red_giver,
+            'red_guess': self.red_guesser
+        }
+        return player_map[self.current_turn]
+
+
     def __unicode__(self):
         return self.unique_id
 

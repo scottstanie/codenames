@@ -8,24 +8,60 @@
 
 <div class="container">
   <h3>{{current_turn}}</h3>
+  {% if user == current_player %}
+    <h4>Your move, {{current_player}}! </h4>
+  {% else %}
+    <h4>Waiting on {{current_player}}</h4>
+  {% endif %}
+
   {% for word_row in word_rows %}
   <div class="row text-center word-row" >
     {% for word in word_row %}
-    <div id="word{{word.id}}" class="col-md-2 word-card" data-color="{{word.color}}" style="background-color:{{word.color}};">{{word.text}}</div>
+      {% if 'give' in current_turn %}
+        <div id="word{{word.id}}" class="col-md-2 word-card" data-color="{{word.color}}" style="background-color:{{word.color}};">{{word.text}}</div>
+        {% else %} <!-- Only show color style to giver -->
+        <div id="word{{word.id}}" class="col-md-2 word-card" data-color="{{word.color}}" >{{word.text}}</div>
+      {% endif %}
     {% endfor %}
-  </div>
+  </div><!--End board -->
+
   {% endfor %}
-  <div class="row text-center" >
-    <button id="submit" class="btn btn-lg">Submit Guess</button>
-  </div>
+  {% if user == current_player %}
+    {% if 'give' in current_turn %}
+    <div class="input-group">
+      <input id="clue-submit" type="text" class="form-control" placeholder="My Clue">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button">Go!</button>
+      </span>
+    </div><!-- /input-group -->
+    Number of cards:
+    <select id="card-count" class="form-control">
+      <option>0</option>
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+      <option>5</option>
+      <option>6</option>
+      <option>7</option>
+      <option>8</option>
+      <option>9</option>
+      <option>10</option>
+    </select>
+    {% else %}
+      <div class="row text-center" >
+        <button id="submit" class="btn btn-lg">Submit Guess</button>
+      </div>
+    {% endif %}
+  {% endif %}
 
   <div class="row">
     <div class="col-md-5">
-      Past Clues:
+      Past Clues: {{past_clues}}
     </div>
 
     <div class="col-md-7">
-      Past Guesses:
+      Past Guesses: {{past_guesses}}
     </div>
 
     <div class="row text-center">

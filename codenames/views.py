@@ -36,6 +36,7 @@ def game(request, unique_id):
         'current_turn': current_game.get_current_turn_display,
         'past_clues': current_game.clue_set.all(),
         'past_guesses': current_game.guess_set.all(),
+        'current_player': current_game.current_player(),
         'players': {
             'Red Team': current_game.red_team(),
             'Blue Team': current_game.blue_team()
