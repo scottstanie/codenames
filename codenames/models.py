@@ -6,6 +6,10 @@ from django.contrib.auth.models import User
 
 COLOR_CHOICES = (('red', 'red'), ('blue', 'blue'), ('grey', 'grey'), ('black', 'black'))
 TEAM_CHOICES = (('red', 'red'), ('blue', 'blue'))
+TURN_STATES = (
+    ('red_guess', 'Red Team Guess'), ('blue_guess', 'Blue Team Guess'),
+    ('red_give', 'Red Team Give'), ('blue_give', 'Blue Team Give')
+)
 
 
 def _createHash():
@@ -28,6 +32,7 @@ class Game(models.Model):
     red_guesser = models.ForeignKey(User, related_name='red_guesser', default=1)
     blue_giver = models.ForeignKey(User, related_name='blue_giver', default=1)
     blue_guesser = models.ForeignKey(User, related_name='blue_guesser', default=1)
+    current_turn = models.CharField(max_length=16, choices=TURN_STATES, default='red_give')
     started_date = models.DateTimeField('date started', auto_now_add=True)
 
     def __unicode__(self):

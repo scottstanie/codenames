@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView
 
+from collections import Counter
 from itertools import chain
 import json
 import random
@@ -54,7 +55,6 @@ def generate_colors():
     '''Makes a random set of colors legal for a board
     Counts must be (9, 8, 7, 1) of (red/blue, blue/red, grey, black)
     '''
-    color_choices = ('red', 'blue', 'grey', 'black')
     rb_counts = [9, 8]
     random.shuffle(rb_counts)
     red_count, blue_count = rb_counts
@@ -79,6 +79,11 @@ def generate_board(game):
     cards = [Card(word=w, color=colors[idx], game=game) for idx, w in enumerate(words)]
     for c in cards:
         c.save()
+
+    colors = Counter(c.color for c in cards)
+    first_color = colors.most_common(1)[0][0]
+    game.current_turn = '%s_give' % first_color
+    game.save()
     return cards
 
 
@@ -87,8 +92,9 @@ def move(request):
     color = request.POST['color']
     unique_id = request.POST['game_id']
     try:
+        game = get_object_or_404(Game, unique_id=unique_id)
         word = get_object_or_404(Word, text=choice_text)
-        card = get_object_or_404(Card, word=word, color=color)
+        card = get_object_or_404(Card, word=word, color=color, game=game)
     except (KeyError, Card.DoesNotExist):
         return render(request, 'codenames/index.html', {
             'error_message': "You didn't select a choice.",
@@ -103,10 +109,10 @@ def move(request):
 @login_required
 def profile(request):
     u = request.user
-    red_givers = list(Game.objects.filter(red_giver=u))
-    blue_givers = list(Game.objects.filter(blue_giver=u))
-    red_guessers = list(Game.objects.filter(red_guesser=u))
-    blue_guessers = list(Game.objects.filter(blue_guesser=u))
+    red_givers = list(Game.objects.filter(red_giver=u).order_by('-started_date'))
+    blue_givers = list(Game.objects.filter(blue_giver=u).order_by('-started_date'))
+    red_guessers = list(Game.objects.filter(red_guesser=u).order_by('-started_date'))
+    blue_guessers = list(Game.objects.filter(blue_guesser=u).order_by('-started_date'))
     giving = red_givers + blue_givers
     guessing = red_guessers + blue_guessers
     context = {
