@@ -30,10 +30,15 @@ class GameCreate(CreateView):
     fields = ['red_giver', 'red_guesser', 'blue_giver', 'blue_guesser']
 
     def form_valid(self, form):
+        # TODO: check that request.user is one of the players
         form.instance.created_by = self.request.user
         return super(GameCreate, self).form_valid(form)
 
     def get_success_url(self):
+        print self.object
+        cards = generate_board()
+        self.object.cards.add(*cards)
+        print self.object.cards
         return reverse('game', kwargs={'unique_id': self.object.unique_id})
 
 
@@ -42,11 +47,35 @@ def game(request, unique_id):
 
 
 def generate_colors():
-    pass
+    '''Makes a random set of colors legal for a board
+    Counts must be (9, 8, 7, 1) of (red/blue, blue/red, grey, black)
+    '''
+    color_choices = ('red', 'blue', 'grey', 'black')
+    rb_counts = [9, 8]
+    random.shuffle(rb_counts)
+    red_count, blue_count = rb_counts
+    grey_count, black_count = 7, 1
+
+    counters = {'red': red_count, 'blue': blue_count,
+                'grey': grey_count, 'black': black_count}
+
+    colors = []
+    while sum(counters.itervalues()) > 0:
+        available_colors = {k: v for k, v in counters.iteritems() if v > 0}
+        color = random.choice(available_colors.keys())
+        counters[color] -= 1
+        colors.append(color)
+
+    return colors
 
 
 def generate_board():
-    return
+    words = list(Word.objects.order_by('?')[:25])
+    colors = generate_colors()
+    cards = [Card(word=w, color=colors[idx]) for idx, w in enumerate(words)]
+    for c in cards:
+        c.save()
+    return cards
 
 def vote(request):
     try:
