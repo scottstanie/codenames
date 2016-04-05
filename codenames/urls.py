@@ -26,8 +26,9 @@ urlpatterns = [
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^', include('registration.backends.simple.urls')),
     url(r'^profile/$', views.profile, name='profile'),
+    url(r'^move/$', views.move, name='move'),
     url(r'^game/(?P<unique_id>\w+)$', views.game, name='game'),
-    url(r'^create/$', 
-        login_required(views.GameCreate.as_view()), 
+    url(r'^create/$',
+        login_required(views.GameCreate.as_view()),
         name='create')
 ]

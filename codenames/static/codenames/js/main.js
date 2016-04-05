@@ -11,38 +11,20 @@ $(document).ready(function(){
   });
 
 
-  $('body').on('click', '.choice', function(e) {
-    var $target = $(e.currentTarget);
-    var winnerId = $target.data('id');
-    var loserId = $(choiceIds).not($(winnerId))[0];
-    var $posting = $.post('/polls/vote/',
-      {winner: winnerId, loser: loserId}
+  $('body').on('click', '#submit', function(e) {
+    var $wordChoice = $('.active.word-card');
+    var text = $wordChoice.text();
+    var color = $wordChoice.data('color');
+    var game_id = location.pathname.split('/')[2];
+    var $posting = $.post(
+      '/move/', 
+      {text: text, color: color, game_id: game_id} 
     );
     $posting.done(function(data) {
-      console.log(data); window.location.reload();
+      window.location.reload();
     });
   });
 
-
-  // Create page:
-
-  // Hit flickr API for image suggestions
-	$("#submit-search").click(function() {
-    var keyword = $("#search-text").val();
-
-    $.ajax({type: "POST",
-            url: "/polls/imgsearch/" + keyword,
-            //data: {
-              //id: $("Shareitem").val()
-            //},
-            success:function(result){
-              var urls = result['imgUrls'];
-              var images = $(".image-choice");
-              var newarr = jQuery.map(images, function(im, idx) {
-                im.src = urls[idx];
-              });
-    }});
-  });
 
   $(".word-card").click(function() {
     // Set only current div active

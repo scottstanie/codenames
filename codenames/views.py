@@ -81,22 +81,22 @@ def generate_board():
         c.save()
     return cards
 
-def vote(request):
+def move(request):
+    choice_text = request.POST['text']
+    color = request.POST['color']
+    unique_id = request.POST['game_id']
     try:
-        winner = get_object_or_404(Item, pk=request.POST['winner'])
-        loser = get_object_or_404(Item, pk=request.POST['loser'])
-        choice = Choice(winner=winner, loser=loser)
-    except (KeyError, Choice.DoesNotExist):
+        word = get_object_or_404(Word, text=choice_text)
+        card = get_object_or_404(Card, word=word, color=color)
+    except (KeyError, Card.DoesNotExist):
         return render(request, 'codenames/index.html', {
             'error_message': "You didn't select a choice.",
         })
     else:
-        winner.votes += 1
-        winner.save()
-        choice.save()
+        card.chosen = True
+        card.save()
         # Always return an HttpResponseRedirect after successfully dealing with POST data. This prevents data from being posted twice if a user hits the back button
-        print 'winner: ', winner_id
-        return HttpResponseRedirect(reverse('codenames:index', kwargs={'winner_id': winner.id}))
+        return HttpResponseRedirect(reverse('game', args=(unique_id,)))
 
 
 @login_required
