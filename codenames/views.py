@@ -103,8 +103,14 @@ def move(request):
 @login_required
 def profile(request):
     u = request.user
-    top_waffles = Item.objects.filter(created_by_id=u.id).order_by('-added_date')
+    red_givers = list(Game.objects.filter(red_giver=u))
+    blue_givers = list(Game.objects.filter(blue_giver=u))
+    red_guessers = list(Game.objects.filter(red_guesser=u))
+    blue_guessers = list(Game.objects.filter(blue_guesser=u))
+    giving = red_givers + blue_givers
+    guessing = red_guessers + blue_guessers
     context = {
-        'waffles': top_waffles
+        'games_giving': giving,
+        'games_guessing': guessing
     }
     return render(request, 'codenames/profile.html', context)

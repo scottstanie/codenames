@@ -1,0 +1,23 @@
+{% extends "codenames/layout.html" %}
+
+{% block body %}
+
+<h3>Your games:</h3>
+<div class="container">
+  <div class="row game-box text-center">
+    <h3 class="game-title">Games giving clues:</h3>
+    {% for game in games_giving%}
+      <h4 class="game-title">
+        <a href="{% url 'game' unique_id=game.unique_id %}">{{ game.unique_id }}</a>
+      </h4>
+    {% endfor %}
+    <h3 class="game-title">Games guessing:</h3>
+    {% for game in games_guessing %}
+      <h4 class="game-title">
+        <a href="{% url 'game' unique_id=game.unique_id %}">{{ game.unique_id }}</a>
+      </h4>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}
