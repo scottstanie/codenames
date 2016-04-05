@@ -16,8 +16,27 @@ def index(request):
         colors = ['red', 'blue']
         full_words = json.load(word_file)
         random.shuffle(full_words)
-        word_idx = [{'id': idx, 'text': word, 'color': random.choice(colors)} for idx, word in enumerate(full_words[:25])]
-        word_rows = [word_idx[i:i + 5] for i in range(0, 25, 5)]
+        word_context = [{'id': idx, 'text': word, 'color': random.choice(colors)} for idx, word in enumerate(full_words[:25])]
+        word_rows = [word_context[i:i + 5] for i in range(0, 25, 5)]
+
+    context = {
+        'word_rows': word_rows
+    }
+    return render(request, 'codenames/index.html', context)
+
+
+def game(request, unique_id):
+    try:
+        current_game = get_object_or_404(Game, unique_id=unique_id)
+    except (KeyError, Game.DoesNotExist):
+        return render(request, 'codenames/index.html', {
+            'error_message': "This game doesn't exist.",
+        })
+
+    cards = current_game.cards.all()
+    word_context = [{'id': idx, 'text': card.word.text, 'color': card.color } 
+                for idx, card in enumerate(cards)]
+    word_rows = [word_context[i:i + 5] for i in range(0, 25, 5)]
 
     context = {
         'word_rows': word_rows
@@ -35,15 +54,9 @@ class GameCreate(CreateView):
         return super(GameCreate, self).form_valid(form)
 
     def get_success_url(self):
-        print self.object
         cards = generate_board()
         self.object.cards.add(*cards)
-        print self.object.cards
         return reverse('game', kwargs={'unique_id': self.object.unique_id})
-
-
-def game(request, unique_id):
-    return render(request, 'codenames/index.html')
 
 
 def generate_colors():
