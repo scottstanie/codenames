@@ -7,12 +7,19 @@
 {% endif %}
 
 <div class="container">
-  <h3>{{current_turn}}</h3>
-  {% if user == current_player %}
-  <h4>Your move, <span id="player">{{current_player}}</span>! </h4>
-  {% else %}
-    <h4>Waiting on {{current_player}}</h4>
-  {% endif %}
+  <div class="row">
+    <div class="col-md-5">
+      <h3>{{current_turn}}</h3>
+      {% if user == current_player %}
+      <h4>Your move, <span id="player">{{current_player}}</span>! </h4>
+      {% else %}
+        <h4>Waiting on {{current_player}}</h4>
+      {% endif %}
+    </div>
+    <div class="col-md-7">
+      <h3> Current clue: {{current_clue}}</h3>
+    </div>
+  </div>
 
   {% for word_row in word_rows %}
   <div class="row text-center word-row" >

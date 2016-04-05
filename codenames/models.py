@@ -92,4 +92,4 @@ class Clue(models.Model):
     game = models.ForeignKey(Game, default=7)
 
     def __unicode__(self):
-        return self.word
+        return '%s - %s' % (self.word, self.number)
