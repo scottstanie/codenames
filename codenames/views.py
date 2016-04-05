@@ -12,7 +12,7 @@ from itertools import chain, cycle
 import json
 import random
 
-from .models import Card, Game, Word, Clue
+from .models import Card, Game, Word, Clue, TURN_STATES
 from django.contrib.auth.models import User
 
 
@@ -101,11 +101,11 @@ def generate_board(game):
 
 
 def find_next_turn(game):
-    turn_cycle = cycle(t[0] for t in models.TURN_STATES)
+    turn_cycle = cycle(t[0] for t in TURN_STATES)
     t = turn_cycle.next()
-    while t != self.current_turn:
+    while t != game.current_turn:
         t = turn_cycle.next()
-    return t
+    return turn_cycle.next()
 
 
 @require_http_methods(["POST"])
@@ -130,7 +130,9 @@ def move(request):
         count = request.POST['count']
         clue = Clue(word=text, number=count, giver=user, game=game)
         clue.save()
+        print game.current_turn
         game.current_turn = find_next_turn(game)
+        print game.current_turn
         game.save()
     # Always return an HttpResponseRedirect after successfully dealing with POST data. This prevents data from being posted twice if a user hits the back button
     return HttpResponseRedirect(reverse('game', args=(unique_id,)))

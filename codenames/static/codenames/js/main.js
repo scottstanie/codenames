@@ -11,7 +11,7 @@ $(document).ready(function(){
   });
 
 
-  $('body').on('click', '#submit-guess', function(e) {
+  $('#submit-guess').click(function(e) {
     var $wordChoice = $('.active.word-card');
     var text = $wordChoice.text();
     var color = $wordChoice.data('color');
@@ -41,7 +41,7 @@ $(document).ready(function(){
     }
   });
 
-  $('body').on('click', '#submit-clue', function(e) {
+  $('#submit-clue').click(function(e) {
     var $cardCount = $('#card-count').find(":selected").text();
     var $clueText = $('#clue-text').val();
     var $player = $('#player').text();
