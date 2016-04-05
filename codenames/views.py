@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView
 
 from collections import Counter
-from itertools import chain
+from itertools import chain, cycle
 import json
 import random
 
@@ -26,12 +26,20 @@ def game(request, unique_id):
         })
 
     cards = current_game.card_set.order_by('pk')
+
     word_context = [{'id': idx, 'text': card.word.text, 'color': card.color }
                 for idx, card in enumerate(cards)]
     word_rows = [word_context[i:i + 5] for i in range(0, 25, 5)]
 
     context = {
-        'word_rows': word_rows
+        'word_rows': word_rows,
+        'current_turn': current_game.get_current_turn_display,
+        'past_clues': current_game.clue_set.all(),
+        'past_guesses': current_game.guess_set.all(),
+        'players': {
+            'Red Team': current_game.red_team(),
+            'Blue Team': current_game.blue_team()
+        }
     }
     return render(request, 'codenames/index.html', context)
 

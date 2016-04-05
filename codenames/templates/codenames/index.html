@@ -7,6 +7,7 @@
 {% endif %}
 
 <div class="container">
+  <h3>{{current_turn}}</h3>
   {% for word_row in word_rows %}
   <div class="row text-center word-row" >
     {% for word in word_row %}
@@ -16,6 +17,28 @@
   {% endfor %}
   <div class="row text-center" >
     <button id="submit" class="btn btn-lg">Submit Guess</button>
+  </div>
+
+  <div class="row">
+    <div class="col-md-5">
+      Past Clues:
+    </div>
+
+    <div class="col-md-7">
+      Past Guesses:
+    </div>
+
+    <div class="row text-center">
+      <h4>Players:</h4>
+      {% for color, team in players.items %}
+      <div class="row">
+      <strong>{{color}}</strong>
+        {% for player in team %} 
+          {{player}}
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
   </div>
 
 </div>
