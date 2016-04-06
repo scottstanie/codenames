@@ -11,6 +11,25 @@ $(document).ready(function(){
   });
 
 
+  $('#submit-pass').click(function(e) {
+    var $teamColor = $('#currentTeam').data('team-color');
+    var game_id = location.pathname.split('/')[2];
+    var $player = $('#player').text();
+    var $clueNumber = $('#clue-number').text();
+    var $posting = $.post(
+      '/guess/', {
+          text: null,
+          teamColor: $teamColor,
+          game_id: game_id,
+          player: $player,
+          clueNumber: $clueNumber,
+      }
+    );
+    $posting.done(function(data) {
+      window.location.reload();
+    });
+  });
+
   $('#submit-guess').click(function(e) {
     var $wordChoice = $('.active.word-card');
     var text = $wordChoice.text();

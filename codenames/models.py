@@ -84,7 +84,7 @@ class Guess(models.Model):
     user = models.ForeignKey(User)
     guesser_team = models.CharField(max_length=5, choices=TEAM_CHOICES, default='red')
     game = models.ForeignKey(Game, default=7)
-    card = models.OneToOneField(Card)
+    card = models.OneToOneField(Card, null=True)
 
     def is_wrong(self):
         return self.card.color != self.guesser_team

@@ -140,15 +140,28 @@ def guess(request):
     game = get_object_or_404(Game, unique_id=unique_id)
     user = get_object_or_404(User, username=player)
 
-    word = get_object_or_404(Word, text=text)
-    card = get_object_or_404(Card, word=word, game=game)
-    card.chosen = True
-    card.save()
+    if text:
+        word = get_object_or_404(Word, text=text)
+        card = get_object_or_404(Card, word=word, game=game)
+        card.chosen = True
+        card.save()
+    else:
+        # User passed
+        card = None
 
     team_color = request.POST['teamColor'].split('_')[0]
     guess = Guess(user=user, guesser_team=team_color, game=game, card=card)
     guess.save()
-    game.current_guess_number += 1
+    if not text:
+        # User passed
+        game.current_turn = find_next_turn(game)
+        game.current_guess_number = 0
+        game.save()
+        return HttpResponseRedirect(
+            reverse('game',
+                    args=(unique_id,)))
+    else:
+        game.current_guess_number += 1
 
     if card.color == 'black':
         # Assassinated!
