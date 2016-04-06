@@ -3,7 +3,6 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView
-from django.contrib.auth.models import User
 from django.views.decorators.http import require_http_methods
 
 
@@ -31,11 +30,14 @@ def game(request, unique_id):
 
     cards = current_game.card_set.order_by('pk')
 
-    word_context = [{'id': idx, 'text': card.word.text, 'color': card.color }
+    word_context = [{'id': idx, 'text': card.word.text, 'color': card.color, 'chosen': card.chosen }
                 for idx, card in enumerate(cards)]
     word_rows = [word_context[i:i + 5] for i in range(0, 25, 5)]
     clues = list(current_game.clue_set.all())
-    current_clue = clues[-1]
+    try:
+        current_clue = clues[-1]
+    except IndexError:
+        current_clue = ''
 
     context = {
         'word_rows': word_rows,

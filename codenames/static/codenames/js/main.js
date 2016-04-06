@@ -26,6 +26,8 @@ $(document).ready(function(){
     });
   });
 
+  // Highlight any that have been chosen
+  $('.word-card[data-chosen="True"]').addClass("chosen");
 
   $(".word-card").click(function() {
     // Set only current div active

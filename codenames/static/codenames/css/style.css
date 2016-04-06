@@ -6,5 +6,9 @@
 }
 
 .active {
+  border: 5px solid green;
+}
+
+.chosen {
   border: 5px solid orange;
 }
