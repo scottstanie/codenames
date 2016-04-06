@@ -32,6 +32,10 @@ $(document).ready(function(){
 
   $('#submit-guess').click(function(e) {
     var $wordChoice = $('.active.word-card');
+    if ($wordChoice.data('chosen') == "True") {
+      alert("Can't choose the same word twice!");
+      return false;
+    }
     var text = $wordChoice.text();
     var $teamColor = $('#currentTeam').data('team-color');
     var game_id = location.pathname.split('/')[2];
