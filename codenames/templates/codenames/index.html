@@ -2,86 +2,18 @@
 
 {% block body %}
 
-{% if error_message %}
-  {{error_message}}
-{% endif %}
-
-<div class="container">
-  <div class="row">
-    <div class="col-md-5">
-      <h3>{{current_turn}}</h3>
-      {% if user == current_player %}
-      <h4>Your move, <span id="player">{{current_player}}</span>! </h4>
-      {% else %}
-        <h4>Waiting on {{current_player}}</h4>
-      {% endif %}
-    </div>
-    <div class="col-md-7">
-      <h3> Current clue: {{current_clue}}</h3>
-    </div>
-  </div>
-
-  {% for word_row in word_rows %}
-  <div class="row text-center word-row" >
-    {% for word in word_row %}
-      {% if 'give' in current_turn and user == current_player  %}
-        <div id="word{{word.id}}" class="col-md-2 word-card" data-color="{{word.color}}" data-chosen="{{word.chosen}}" style="background-color:{{word.color}};">{{word.text}}</div>
-        {% else %} <!-- Only show color style to giver -->
-        <div id="word{{word.id}}" class="col-md-2 word-card" data-color="{{word.color}}" data-chosen="{{word.chosen}}" >{{word.text}}</div>
-      {% endif %}
-    {% endfor %}
-  </div><!--End board -->
-
-  {% endfor %}
-  {% if user == current_player %}
-    {% if 'give' in current_turn %}
-    <div class="input-group">
-      <input id="clue-text" type="text" class="form-control" placeholder="My Clue">
-      <span class="input-group-btn">
-        <button id="submit-clue" class="btn btn-default" type="button">Give clue!</button>
-      </span>
-    </div><!-- /input-group -->
-    Number of cards:
-    <select id="card-count" class="form-control">
-      <option>0</option>
-      <option>1</option>
-      <option>2</option>
-      <option>3</option>
-      <option>4</option>
-      <option>5</option>
-      <option>6</option>
-      <option>7</option>
-      <option>8</option>
-      <option>9</option>
-      <option>10</option>
-    </select>
-    {% else %}
-      <div class="row text-center" >
-        <button id="submit-guess" class="btn btn-lg">Submit Guess</button>
-      </div>
-    {% endif %}
+<div class="jumbotron">
+<h3>Codenames!</h3>
+  <div class="list-group">
+  {% if user.is_anonymous %}
+    <a class="list-group-item" href="{% url 'login' %}">Login</a>
+    <a class="list-group-item" href="/register/">Register</a>
+  {% else %}
+  <h4>Hey {{user}}</h4>
+    <a class="list-group-item" href="{% url 'create' %}" >Create new game</a>
+    <a class="list-group-item" href="{% url 'profile' %}" >See current games</a>
+    <a class="list-group-item" href="{% url 'logout' %}">Logout</a>
   {% endif %}
-
-  <div class="row">
-    <div class="col-md-5">
-      Past Clues: {{past_clues}}
-    </div>
-
-    <div class="col-md-7">
-      Past Guesses: {{past_guesses}}
-    </div>
-
-    <div class="row text-center">
-      <h4>Players:</h4>
-      {% for color, team in players.items %}
-      <div class="row">
-      <strong>{{color}}</strong>
-        {% for player in team %}
-          {{player}}
-        {% endfor %}
-      </div>
-      {% endfor %}
-    </div>
   </div>
 
 </div>

@@ -17,9 +17,15 @@ $(document).ready(function(){
     var color = $wordChoice.data('color');
     var game_id = location.pathname.split('/')[2];
     var $player = $('#player').text();
+    var $clueNumber = $('#clue-number').text();
     var $posting = $.post(
-      '/move/',
-      {type: "guess", text: text, color: color, game_id: game_id, player: $player}
+      '/guess/', {
+          text: text,
+          color: color,
+          game_id: game_id,
+          player: $player,
+          clueNumber: $clueNumber,
+      }
     );
     $posting.done(function(data) {
       window.location.reload();
@@ -27,7 +33,7 @@ $(document).ready(function(){
   });
 
   // Highlight any that have been chosen
-  $('.word-card[data-chosen="True"]').addClass("chosen").css('background-color', function() { 
+  $('.word-card[data-chosen="True"]').addClass("chosen").css('background-color', function() {
     return $(this).data('color');
   })
 
@@ -55,8 +61,7 @@ $(document).ready(function(){
     }
     var game_id = location.pathname.split('/')[2];
     var $posting = $.post(
-      '/move/', {
-        type: "clue",
+      '/give/', {
         text: $clueText,
         count: $cardCount,
         game_id: game_id,

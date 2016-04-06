@@ -35,6 +35,7 @@ class Game(models.Model):
     blue_giver = models.ForeignKey(User, related_name='blue_giver', default=1)
     blue_guesser = models.ForeignKey(User, related_name='blue_guesser', default=1)
     current_turn = models.CharField(max_length=16, choices=TURN_STATES, default='red_give')
+    current_guess_number = models.IntegerField(default=0)
     started_date = models.DateTimeField('date started', auto_now_add=True)
 
     def blue_team(self):
@@ -81,7 +82,7 @@ class Guess(models.Model):
     game = models.ForeignKey(Game, default=7)
     card = models.OneToOneField(Card)
 
-    def correct(self):
+    def is_correct(self):
         return self.card.color == self.guesser_team
 
 
