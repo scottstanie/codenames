@@ -9,7 +9,7 @@
 <div class="container">
   <div class="row">
     <div class="col-md-5">
-      <h3>{{current_turn}}</h3>
+      <h3 id="currentTeam" data-team-color="{{team_color}}">{{current_turn}}</h3>
       {% if user == current_player %}
       <h4>Your move, <span id="player">{{current_player}}</span>! </h4>
       {% else %}
@@ -19,7 +19,7 @@
     {% if 'guess' in current_turn %}
     <div class="col-md-7">
       <h3> Current clue: <span id="clue-word">"{{current_clue.word}}"</span><span id="clue-number"> {{current_clue.number}}</span></h3>
-      <h4>Guesses so far: {{game.current_guess_number}}</h4>
+      <h4>Number of guesses so far: {{current_guess_number}}</h4>
     </div>
     {% endif %}
   </div>

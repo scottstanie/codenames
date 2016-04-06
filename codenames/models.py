@@ -82,8 +82,8 @@ class Guess(models.Model):
     game = models.ForeignKey(Game, default=7)
     card = models.OneToOneField(Card)
 
-    def is_correct(self):
-        return self.card.color == self.guesser_team
+    def is_wrong(self):
+        return self.card.color != self.guesser_team
 
 
 class Clue(models.Model):

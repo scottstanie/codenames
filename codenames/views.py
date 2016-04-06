@@ -18,7 +18,7 @@ def index(request):
     return render(request, 'codenames/index.html')
 
 
-def game(request, unique_id, guess_number=0):
+def game(request, unique_id):
     try:
         current_game = get_object_or_404(Game, unique_id=unique_id)
     except (KeyError, Game.DoesNotExist):
@@ -40,9 +40,10 @@ def game(request, unique_id, guess_number=0):
     context = {
         'word_rows': word_rows,
         'current_turn': current_game.get_current_turn_display,
+        'team_color': current_game.current_turn,
         'past_clues': clues,
         'current_clue': current_clue,
-        'guess_number': guess_number,
+        'current_guess_number': current_game.current_guess_number,
         'past_guesses': current_game.guess_set.all(),
         'current_player': current_game.current_player(),
         'players': {
@@ -120,23 +121,24 @@ def guess(request):
     game = get_object_or_404(Game, unique_id=unique_id)
     user = get_object_or_404(User, username=player)
 
-    color = request.POST['color']
     word = get_object_or_404(Word, text=text)
     card = get_object_or_404(Card, word=word, game=game)
-    guess = Guess(user=user, guesser_team=color, game=game, card=card)
-    guess.save()
     card.chosen = True
     card.save()
 
-    if game.current_guess_number == clue_number or not guess.is_correct():
+    team_color = request.POST['teamColor'].split('_')[0]
+    guess = Guess(user=user, guesser_team=team_color, game=game, card=card)
+    guess.save()
+    game.current_guess_number += 1
+
+    if game.current_guess_number >= clue_number or guess.is_wrong():
         game.current_turn = find_next_turn(game)
-    else:
-        game.current_guess_number += 1
+        game.current_guess_number = 0
 
     game.save()
     return HttpResponseRedirect(
             reverse('game',
-                    args=(unique_id, guess_number)))
+                    args=(unique_id,)))
 
 
 @require_http_methods(["POST"])

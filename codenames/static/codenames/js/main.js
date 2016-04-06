@@ -14,14 +14,14 @@ $(document).ready(function(){
   $('#submit-guess').click(function(e) {
     var $wordChoice = $('.active.word-card');
     var text = $wordChoice.text();
-    var color = $wordChoice.data('color');
+    var $teamColor = $('#currentTeam').data('team-color');
     var game_id = location.pathname.split('/')[2];
     var $player = $('#player').text();
     var $clueNumber = $('#clue-number').text();
     var $posting = $.post(
       '/guess/', {
           text: text,
-          color: color,
+          teamColor: $teamColor,
           game_id: game_id,
           player: $player,
           clueNumber: $clueNumber,

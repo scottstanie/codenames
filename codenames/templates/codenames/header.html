@@ -4,7 +4,7 @@
     <img src="{% static 'codenames/images/codenames.jpg' %}" width="100px" height="104px" />
   </div>
   <ul class="nav nav-tabs">
-    <li role="presentation" ><a href="{% url 'index' %}">Home- New Game</a></li>
+    <li role="presentation" ><a href="{% url 'index' %}">Home</a></li>
     <li role="presentation" >
       {% if user.is_anonymous %}
         <a href="{% url 'login' %}">Login</a>
