@@ -27,7 +27,9 @@ $(document).ready(function(){
   });
 
   // Highlight any that have been chosen
-  $('.word-card[data-chosen="True"]').addClass("chosen");
+  $('.word-card[data-chosen="True"]').addClass("chosen").css('background-color', function() { 
+    return $(this).data('color');
+  })
 
   $(".word-card").click(function() {
     // Set only current div active

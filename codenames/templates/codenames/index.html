@@ -24,7 +24,7 @@
   {% for word_row in word_rows %}
   <div class="row text-center word-row" >
     {% for word in word_row %}
-      {% if 'give' in current_turn %}
+      {% if 'give' in current_turn and user == current_player  %}
         <div id="word{{word.id}}" class="col-md-2 word-card" data-color="{{word.color}}" data-chosen="{{word.chosen}}" style="background-color:{{word.color}};">{{word.text}}</div>
         {% else %} <!-- Only show color style to giver -->
         <div id="word{{word.id}}" class="col-md-2 word-card" data-color="{{word.color}}" data-chosen="{{word.chosen}}" >{{word.text}}</div>
