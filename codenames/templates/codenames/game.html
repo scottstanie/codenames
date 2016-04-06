@@ -9,11 +9,14 @@
 <div class="container">
   <div class="row">
     <div class="col-md-5">
+      {% if active == False %}
+      <h4>Game over!</h4>
+      {% elif active and user == current_player %}
       <h3 id="currentTeam" data-team-color="{{team_color}}">{{current_turn}}</h3>
-      {% if user == current_player %}
       <h4>Your move, <span id="player">{{current_player}}</span>! </h4>
       {% else %}
-        <h4>Waiting on {{current_player}}</h4>
+      <h3 id="currentTeam" data-team-color="{{team_color}}">{{current_turn}}</h3>
+      <h4>Waiting on {{current_player}}</h4>
       {% endif %}
     </div>
     {% if 'guess' in current_turn %}
@@ -36,7 +39,7 @@
   </div><!--End board -->
 
   {% endfor %}
-  {% if user == current_player %}
+  {% if user == current_player and active %}
     {% if 'give' in current_turn %}
     <div class="input-group">
       <input id="clue-text" type="text" class="form-control" placeholder="My Clue">

@@ -36,7 +36,11 @@ class Game(models.Model):
     blue_guesser = models.ForeignKey(User, related_name='blue_guesser', default=1)
     current_turn = models.CharField(max_length=16, choices=TURN_STATES, default='red_give')
     current_guess_number = models.IntegerField(default=0)
+    red_remaining = models.IntegerField(default=9)
+    blue_remaining = models.IntegerField(default=9)
     started_date = models.DateTimeField('date started', auto_now_add=True)
+    active = models.BooleanField(default=True)
+    winning_team = models.CharField(max_length=5, choices=TEAM_CHOICES, null=True)
 
     def blue_team(self):
         return [self.blue_giver, self.blue_guesser]

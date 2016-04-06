@@ -39,6 +39,7 @@ def game(request, unique_id):
 
     context = {
         'word_rows': word_rows,
+        'active': current_game.active,
         'current_turn': current_game.get_current_turn_display,
         'team_color': current_game.current_turn,
         'past_clues': clues,
@@ -100,6 +101,8 @@ def generate_board(game):
     colors = Counter(c.color for c in cards)
     first_color = colors.most_common(1)[0][0]
     game.current_turn = '%s_give' % first_color
+    game.red_remaining = colors['red']
+    game.blue_remaining = colors['blue']
     game.save()
 
 
@@ -109,6 +112,22 @@ def find_next_turn(game):
     while t != game.current_turn:
         t = turn_cycle.next()
     return turn_cycle.next()
+
+
+def decrement_card_counter(game, card_color):
+    if card_color == 'red':
+        game.red_remaining -= 1
+    elif card_color == 'blue':
+        game.blue_remaining -= 1
+
+
+def check_game_over(game):
+    if game.red_remaining == 0:
+        game.winning_team = 'red'
+        game.active = False
+    elif game.blue_remaining == 0:
+        game.winning_team = 'blue'
+        game.active = False
 
 
 @require_http_methods(["POST"])
@@ -131,9 +150,19 @@ def guess(request):
     guess.save()
     game.current_guess_number += 1
 
-    if game.current_guess_number >= clue_number or guess.is_wrong():
+    if card.color == 'black':
+        # Assassinated!
+        game.active = False
+        team_choices = {'red', 'blue'}
+        other_team = (team_choices - set(team_color)).pop()
+        game.winning_team = other_team
+    elif game.current_guess_number >= clue_number + 1 or guess.is_wrong():
+        # Note: this greater than also works for '0' unlimited clues
         game.current_turn = find_next_turn(game)
         game.current_guess_number = 0
+
+    decrement_card_counter(game, card.color)
+    check_game_over(game)
 
     game.save()
     return HttpResponseRedirect(
