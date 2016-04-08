@@ -89,6 +89,13 @@ class Guess(models.Model):
     def is_wrong(self):
         return self.card.color != self.guesser_team
 
+    def __unicode__(self):
+        if self.card is None:
+            string = "Pass by %s on %s" % (self.user, self.guesser_team)
+        else:
+            string = '"%s" guessed by %s on %s' % (self.card, self.user, self.guesser_team)
+        return string
+
 
 class Clue(models.Model):
     word = models.CharField(max_length=96)

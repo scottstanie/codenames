@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView
@@ -31,7 +31,7 @@ def game(request, unique_id):
     word_context = [{'id': idx, 'text': card.word.text, 'color': card.color, 'chosen': card.chosen}
                     for idx, card in enumerate(cards)]
     word_rows = [word_context[i:i + 5] for i in range(0, 25, 5)]
-    clues = list(current_game.clue_set.all())
+    clues = list(current_game.clue_set.order_by('id'))
     try:
         current_clue = clues[-1]
     except IndexError:
@@ -45,7 +45,7 @@ def game(request, unique_id):
         'past_clues': clues,
         'current_clue': current_clue,
         'current_guess_number': current_game.current_guess_number,
-        'past_guesses': current_game.guess_set.all(),
+        'past_guesses': current_game.guess_set.order_by('id'),
         'current_player': current_game.current_player(),
         'players': {
             'Red Team': current_game.red_team(),

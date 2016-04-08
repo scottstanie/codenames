@@ -17,6 +17,8 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
+from django.conf.urls.static import static
 import views
 
 urlpatterns = [
@@ -31,5 +33,8 @@ urlpatterns = [
     url(r'^game/(?P<unique_id>\w+)$', views.game, name='game'),
     url(r'^create/$',
         login_required(views.GameCreate.as_view()),
-        name='create')
-]
+        name='create'),
+    url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
+        {'document_root', settings.STATIC_ROOT}
+    ),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

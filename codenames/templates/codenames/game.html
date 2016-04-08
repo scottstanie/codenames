@@ -70,12 +70,22 @@
   {% endif %}
 
   <div class="row">
-    <div class="col-md-5">
-      Past Clues: {{past_clues}}
+    <div class="col-md-5 text-center">
+      Past Clues:
+      {% for clue in past_clues %}
+      <div class=row>
+      {{clue}}
+      </div>
+      {% endfor %}
     </div>
 
-    <div class="col-md-7">
-      Past Guesses: {{past_guesses}}
+    <div class="col-md-7 text-center">
+      Past Guesses:
+      {% for guess in past_guesses %}
+      <div class=row>
+        {{guess}}
+      </div>
+      {% endfor %}
     </div>
 
     <div class="row text-center">
@@ -83,9 +93,8 @@
       {% for color, team in players.items %}
       <div class="row">
       <strong>{{color}}</strong>
-        {% for player in team %}
-          {{player}}
-        {% endfor %}
+      Giver: {{team.0}},
+      Guesser: {{team.1}}
       </div>
       {% endfor %}
     </div>

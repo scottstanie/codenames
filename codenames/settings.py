@@ -23,10 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '10x9iqd=u=#9^h(@gl-ax#l87$44irk8ybdii@+6q1b4z0*9s)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -127,4 +126,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+if DEBUG is False:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+else:
+    STATIC_DIRS = (
+        os.path.join(BASE_DIR, 'static'),
+    )
+
 LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'
