@@ -5,6 +5,8 @@
   </div>
   <ul class="nav nav-tabs">
     <li role="presentation" ><a href="{% url 'index' %}">Home</a></li>
+    <li role="presentation" ><a id="my-games" href="{% url 'profile' %}" >My Games</a></li>
+    <li role="presentation" ><a href="{% url 'create' %}" >Create new game</a></li>
     <li role="presentation" >
       {% if user.is_anonymous %}
         <a href="{% url 'login' %}">Login</a>
@@ -14,7 +16,5 @@
       </a>
     </li>
     <li role="presentation" ><a href="/register/">Register</a></li>
-    <li role="presentation" ><a href="{% url 'create' %}" >Create new game</a></li>
-    <li role="presentation" ><a href="{% url 'profile' %}" >Welcome, {{ user }}.</a></li>
   </ul>
 </div>

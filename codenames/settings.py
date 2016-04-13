@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '10x9iqd=u=#9^h(@gl-ax#l87$44irk8ybdii@+6q1b4z0*9s)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -78,13 +79,21 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'codenames',
-        'HOST': 'localhost',
+        'USER': 'codeprod',
+        'PASSWORD': 'codepass',
+        'HOST': '',
         'PORT': '5432',
     },
-    'sqlite': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+#     'local': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'codenames',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     },
+#    'sqlite': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#    }
 }
 
 

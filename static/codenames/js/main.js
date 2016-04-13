@@ -56,9 +56,11 @@ $(document).ready(function(){
   });
 
   // Highlight any that have been chosen
-  $('.word-card[data-chosen="True"]').addClass("chosen").css('background-color', function() {
-    return $(this).data('color');
-  })
+  var $chosenCards = $('.word-card[data-chosen="True"]');
+  $.map($chosenCards, function(card) {
+    $(card).addClass("chosen");
+    showColor(card);
+  });
 
   $(".word-card").click(function() {
     // Set only current div active
@@ -96,7 +98,70 @@ $(document).ready(function(){
     });
   });
 
+  var $gameInfo = $('#game-info');
+  var gameActive = $gameInfo.data('active');
+  var currentPlayer = $gameInfo.data('current-player');
+  var requestUser = $gameInfo.data('request-user');
+  var isGiver = $gameInfo.data('is-giver');
+
+  if (currentPlayer != requestUser) {
+    hideInputs(true, true);
+  };
+
+  // For the users that are givers in this game, show all card colors
+  if (isGiver == "True") {
+    $.map($('.word-card'), showColor);
+    // Hide the guessing buttons for givers
+    hideInputs(false, true);
+  } else {
+    // Hide the giving buttons for guessers
+    hideInputs(true, false);
+  };
+
+
+  // Once the game is over, show the color map
+  if (gameActive == "False") {
+    $.map($('.word-card'), showColor);
+    hideInputs(true, true);
+  };
+
+
+  // Refresh page on inactivity
+  var currentTime = new Date().getTime();
+  $(document.body).bind("mousemove keypress", function(e) {
+    currentTime = new Date().getTime();
+  });
+
+  function refresh() {
+  if(new Date().getTime() - currentTime >= 45000)
+    window.location.reload(true);
+  else
+    setTimeout(refresh, 10000);
+  }
+
+  setTimeout(refresh, 10000);
 });
+
+
+// Highlight any that have been chosen
+function showColor(card) {
+  $(card).css('background-color', function() {
+    return $(this).data('color');
+  })
+}
+
+// Remove input buttons if it's not your turn
+function hideInputs(giving, guessing) {
+  // giving: hide the '.giving' input buttons
+  // guessing: hide the '.guessing' input buttons
+  function hide(classString) {
+    $(classString).map(function() {
+      $(this).css('display', 'none');
+    });
+  }
+  if (giving) hide('.inputs.giving');
+  if (guessing) hide('.inputs.guessing');
+}
 
 function getCookie(name) {
     var cookieValue = null;

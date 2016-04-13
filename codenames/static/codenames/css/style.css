@@ -12,3 +12,7 @@
 .chosen {
   border: 5px solid orange;
 }
+
+.waiting {
+  color: red
+}

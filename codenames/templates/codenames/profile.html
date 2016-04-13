@@ -2,22 +2,63 @@
 
 {% block body %}
 
-<h3>Your games:</h3>
-<div class="container">
+<div class="container text-center">
+<h4>Your games:</h4>
   <div class="row game-box text-center">
-    <h3 class="game-title">Games giving clues:</h3>
-    {% for game in games_giving%}
-      <h4 class="game-title">
-        <a href="{% url 'game' unique_id=game.unique_id %}">{{ game.unique_id }}</a>
-      </h4>
+    {% if waiting_on_you %}
+    <h4 class="waiting game-title">Waiting on you!</h4>
+    {% for game in waiting_on_you%}
+      <div class="row">
+        <a href="{% url 'game' unique_id=game.unique_id %}">{{ game.print_with_score }}</a>
+      </div>
+      <div class="row">
+        Started {{ game.started_date }}
+      </div>
     {% endfor %}
-    <h3 class="game-title">Games guessing:</h3>
-    {% for game in games_guessing %}
-      <h4 class="game-title">
-        <a href="{% url 'game' unique_id=game.unique_id %}">{{ game.unique_id }}</a>
-      </h4>
+    {% else %}
+    <h4 class="game-title">No games waiting on you</h4>
+    {% endif %}
+
+    <h4 class="game-title">Active Games giving clues:</h4>
+    {% for game in active.games_giving%}
+      <div class="row">
+        <a href="{% url 'game' unique_id=game.unique_id %}">{{ game.print_with_score }}</a>
+      </div>
+      <div class="row">
+        Started {{ game.started_date }}
+      </div>
+    {% endfor %}
+    <h4 class="game-title">Active games guessing:</h4>
+    {% for game in active.games_guessing %}
+      <div class="row">
+        <a href="{% url 'game' unique_id=game.unique_id %}">{{ game.print_with_score }}</a>
+      </div>
+      <div class="row">
+        Started {{ game.started_date }}
+      </div>
     {% endfor %}
   </div>
 
+  <div class="row game-box text-center">
+    <h3> Finished Games</h3>
+    <h4 class="game-title">Inactive games giving clues:</h4>
+    {% for game in inactive.games_giving%}
+      <div class="row">
+        <a href="{% url 'game' unique_id=game.unique_id %}">{{ game.print_with_score }}</a>
+      </div>
+      <div class="row">
+        Started {{ game.started_date }}
+      </div>
+    {% endfor %}
+    <h4 class="game-title">Games guessing:</h4>
+    {% for game in inactive.games_guessing %}
+      <div class="row">
+        <a href="{% url 'game' unique_id=game.unique_id %}">{{ game.print_with_score }}</a>
+      </div>
+      <div class="row">
+        Started {{ game.started_date }}
+      </div>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}

@@ -13,7 +13,7 @@ TURN_STATES = (
 )
 
 
-def _createHash():
+def _create_hash():
     """This function generate 10 character long hash"""
     hash = hashlib.sha1()
     hash.update(str(time.time()))
@@ -29,7 +29,7 @@ class Word(models.Model):
 
 
 class Game(models.Model):
-    unique_id = models.CharField(max_length=10, default=_createHash, unique=True)
+    unique_id = models.CharField(max_length=10, default=_create_hash, unique=True)
     red_giver = models.ForeignKey(User, related_name='red_giver', default=1)
     red_guesser = models.ForeignKey(User, related_name='red_guesser', default=1)
     blue_giver = models.ForeignKey(User, related_name='blue_giver', default=1)
@@ -60,6 +60,13 @@ class Game(models.Model):
             'red_guess': self.red_guesser
         }
         return player_map[self.current_turn]
+
+    def is_giver(self, user):
+        return user == self.blue_giver or user == self.red_giver
+
+    def print_with_score(self):
+        return "Game %s: %s red remaining, %s blue remaining" % \
+                (self.unique_id, self.red_remaining, self.blue_remaining)
 
     def __unicode__(self):
         return self.unique_id

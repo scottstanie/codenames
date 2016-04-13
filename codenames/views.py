@@ -47,6 +47,7 @@ def game(request, unique_id):
         'current_guess_number': current_game.current_guess_number,
         'past_guesses': current_game.guess_set.order_by('id'),
         'current_player': current_game.current_player(),
+        'user_is_giver': current_game.is_giver(request.user),
         'players': {
             'Red Team': current_game.red_team(),
             'Blue Team': current_game.blue_team()
@@ -139,6 +140,7 @@ def guess(request):
 
     game = get_object_or_404(Game, unique_id=unique_id)
     user = get_object_or_404(User, username=player)
+    check_double_post(game, user)
 
     if text:
         word = get_object_or_404(Word, text=text)
@@ -169,7 +171,8 @@ def guess(request):
         team_choices = {'red', 'blue'}
         other_team = (team_choices - set(team_color)).pop()
         game.winning_team = other_team
-    elif game.current_guess_number >= clue_number + 1 or guess.is_wrong():
+    elif (clue_number > 0 and game.current_guess_number >= clue_number + 1) \
+            or guess.is_wrong():
         # Note: this greater than also works for '0' unlimited clues
         game.current_turn = find_next_turn(game)
         game.current_guess_number = 0
@@ -183,6 +186,10 @@ def guess(request):
                     args=(unique_id,)))
 
 
+def check_double_post(game, user):
+    return user.username != game.current_player().username
+
+
 @require_http_methods(["POST"])
 def give(request):
     text = request.POST['text']
@@ -191,11 +198,13 @@ def give(request):
 
     game = get_object_or_404(Game, unique_id=unique_id)
     user = get_object_or_404(User, username=player)
+    if check_double_post(game, user):
+        # Player has already given clue, probably a double post
+        return HttpResponseRedirect(reverse('game', args=(game.unique_id,)))
 
     count = request.POST['count']
     clue = Clue(word=text, number=count, giver=user, game=game)
     clue.save()
-    # Always return an HttpResponseRedirect after successfully dealing with POST data. This prevents data from being posted twice if a user hits the back button
     game.current_turn = find_next_turn(game)
     game.save()
     return HttpResponseRedirect(reverse('game', args=(unique_id,)))
@@ -208,10 +217,22 @@ def profile(request):
     blue_givers = list(Game.objects.filter(blue_giver=u).order_by('-started_date'))
     red_guessers = list(Game.objects.filter(red_guesser=u).order_by('-started_date'))
     blue_guessers = list(Game.objects.filter(blue_guesser=u).order_by('-started_date'))
-    giving = red_givers + blue_givers
-    guessing = red_guessers + blue_guessers
+    giving = list(set(red_givers + blue_givers))
+    guessing = list(set(red_guessers + blue_guessers))
+    waiting_on_you = [g for g in (giving + guessing) if g.current_player().id == u.id and g.active is True]
+    active_giving = [g for g in giving if g.active is True]
+    active_guessing = [g for g in guessing if g.active is True]
+    inactive_giving = [g for g in giving if g.active is False]
+    inactive_guessing = [g for g in guessing if g.active is False]
     context = {
-        'games_giving': giving,
-        'games_guessing': guessing
+        'waiting_on_you': waiting_on_you,
+        'active': {
+            'games_giving': active_giving,
+            'games_guessing': active_guessing
+        },
+        'inactive': {
+            'games_giving': inactive_giving,
+            'games_guessing': inactive_guessing
+        }
     }
     return render(request, 'codenames/profile.html', context)

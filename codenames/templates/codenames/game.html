@@ -7,7 +7,7 @@
 {% endif %}
 
 <div class="container">
-  <div class="row">
+  <div id="game-info" class="row" data-active="{{active}}" data-current-player="{{current_player.id}}" data-request-user="{{user.id}}" data-is-giver={{user_is_giver}} >
     <div class="col-md-5">
       {% if active == False %}
       <h4>Game over!</h4>
@@ -27,20 +27,16 @@
     {% endif %}
   </div>
 
-  {% for word_row in word_rows %}
-  <div class="row text-center word-row" >
-    {% for word in word_row %}
-      {% if 'give' in current_turn and user == current_player  %}
-        <div id="word{{word.id}}" class="col-md-2 word-card" data-color="{{word.color}}" data-chosen="{{word.chosen}}" style="background-color:{{word.color}};">{{word.text}}</div>
-        {% else %} <!-- Only show color style to giver -->
+  <div id="game-board" class="row">
+    {% for word_row in word_rows %}
+    <div class="row text-center word-row" >
+      {% for word in word_row %}
         <div id="word{{word.id}}" class="col-md-2 word-card" data-color="{{word.color}}" data-chosen="{{word.chosen}}" >{{word.text}}</div>
-      {% endif %}
-    {% endfor %}
-  </div><!--End board -->
+      {% endfor %}
+    </div><!--End board -->
 
   {% endfor %}
-  {% if user == current_player and active %}
-    {% if 'give' in current_turn %}
+  <div class="inputs giving row">
     <div class="input-group">
       <input id="clue-text" type="text" class="form-control" placeholder="My Clue">
       <span class="input-group-btn">
@@ -61,20 +57,19 @@
       <option>9</option>
       <option>10</option>
     </select>
-    {% else %}
-      <div class="row text-center" >
-        <button id="submit-guess" class="btn btn-lg">Submit Guess</button>
-        <button id="submit-pass" class="btn btn-lg">Pass</button>
-      </div>
-    {% endif %}
-  {% endif %}
+  </div>
+    <div class="inputs guessing row text-center" >
+      <button id="submit-guess" class="btn btn-lg">Submit Guess</button>
+      <button id="submit-pass" class="btn btn-lg">Pass</button>
+    </div>
+  </div>
 
   <div class="row">
     <div class="col-md-5 text-center">
       Past Clues:
       {% for clue in past_clues %}
       <div class=row>
-      {{clue}}
+        {{clue.giver}}: {{clue}}
       </div>
       {% endfor %}
     </div>

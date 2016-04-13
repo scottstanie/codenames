@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
             name='Game',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('unique_id', models.CharField(default=codenames.models._createHash, max_length=10, unique=True)),
+                ('unique_id', models.CharField(default=codenames.models._create_hash, max_length=10, unique=True)),
                 ('url', models.URLField()),
                 ('started_date', models.DateTimeField(auto_now_add=True, verbose_name=b'date started')),
                 ('blue_giver', models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='blue_giver', to=settings.AUTH_USER_MODEL)),
