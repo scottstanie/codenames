@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^guess/$', views.guess, name='guess'),
     url(r'^give/$', views.give, name='give'),
     url(r'^game/(?P<unique_id>\w+)$', views.game, name='game'),
+    url(r'^waiting/(?P<user_id>\w+)$', views.waiting, name='waiting'),
     url(r'^create/$',
         login_required(views.GameCreate.as_view()),
         name='create'),

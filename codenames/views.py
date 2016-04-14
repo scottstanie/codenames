@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView
@@ -14,8 +14,21 @@ from .models import Card, Game, Word, Clue, Guess, TURN_STATES
 from django.contrib.auth.models import User
 
 
+def augment_context(request):
+    return {'request_user': request.user}
+
+
 def index(request):
     return render(request, 'codenames/index.html')
+
+
+def waiting(request, user_id):
+    '''Sends a JsonResponse back with 'true'
+    if there are games waiting on this user'''
+    user = get_object_or_404(User, id=user_id)
+    giving, guessing = find_games(user)
+    waiting_on_you = find_waiting_games(user, giving, guessing)
+    return JsonResponse({'waitingOnYou': waiting_on_you != []})
 
 
 def game(request, unique_id):
@@ -93,6 +106,8 @@ def generate_colors():
 
 
 def generate_board(game):
+    '''Create a random new board with 25 cards,
+     save the board and game'''
     words = list(Word.objects.order_by('?')[:25])
     colors = generate_colors()
     cards = [Card(word=w, color=colors[idx], game=game) for idx, w in enumerate(words)]
@@ -210,16 +225,29 @@ def give(request):
     return HttpResponseRedirect(reverse('game', args=(unique_id,)))
 
 
+def find_games(user):
+    '''Find all (unique) games with this user, break out by giving and guessing
+    Sorted by started date descending'''
+    red_givers = list(Game.objects.filter(red_giver=user))
+    blue_givers = list(Game.objects.filter(blue_giver=user))
+    red_guessers = list(Game.objects.filter(red_guesser=user))
+    blue_guessers = list(Game.objects.filter(blue_guesser=user))
+    giving = sorted(list(set(red_givers + blue_givers)), key=lambda g: g.started_date, reverse=True)
+    guessing = sorted(list(set(red_guessers + blue_guessers)), key=lambda g: g.started_date, reverse=True)
+    return giving, guessing
+
+
+def find_waiting_games(user, giving, guessing):
+    '''Return the list of games that are waiting on the given user'''
+    return [g for g in (giving + guessing)
+            if g.current_player().id == user.id and g.active is True]
+
+
 @login_required
 def profile(request):
     u = request.user
-    red_givers = list(Game.objects.filter(red_giver=u).order_by('-started_date'))
-    blue_givers = list(Game.objects.filter(blue_giver=u).order_by('-started_date'))
-    red_guessers = list(Game.objects.filter(red_guesser=u).order_by('-started_date'))
-    blue_guessers = list(Game.objects.filter(blue_guesser=u).order_by('-started_date'))
-    giving = list(set(red_givers + blue_givers))
-    guessing = list(set(red_guessers + blue_guessers))
-    waiting_on_you = [g for g in (giving + guessing) if g.current_player().id == u.id and g.active is True]
+    giving, guessing = find_games(u)
+    waiting_on_you = find_waiting_games(u, giving, guessing)
     active_giving = [g for g in giving if g.active is True]
     active_guessing = [g for g in guessing if g.active is True]
     inactive_giving = [g for g in giving if g.active is False]

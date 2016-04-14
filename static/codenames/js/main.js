@@ -9,7 +9,19 @@ $(document).ready(function(){
       }
     }
   });
+  var requestUser = $('#user-info').data('request-user');
+  if (requestUser != 'None') {
+    $.ajax({
+      type: 'GET',
+      url: '/waiting/' + requestUser,
+      success: function(result) {
+        if(result['waitingOnYou']) {
+          setWaiting();
+        };
+      },
+    });
 
+  };
 
   $('#submit-pass').click(function(e) {
     var $teamColor = $('#currentTeam').data('team-color');
@@ -101,7 +113,6 @@ $(document).ready(function(){
   var $gameInfo = $('#game-info');
   var gameActive = $gameInfo.data('active');
   var currentPlayer = $gameInfo.data('current-player');
-  var requestUser = $gameInfo.data('request-user');
   var isGiver = $gameInfo.data('is-giver');
 
   if (currentPlayer != requestUser) {
@@ -142,6 +153,15 @@ $(document).ready(function(){
   setTimeout(refresh, 10000);
 });
 
+
+// Change the 'My Games' in navbar to red if user has games waiting
+function setWaiting() {
+  $('#my-games').css({
+    "border": "solid red 2px",
+    "color": "red"
+  });
+  $('title').prepend('(1) ');
+}
 
 // Highlight any that have been chosen
 function showColor(card) {
