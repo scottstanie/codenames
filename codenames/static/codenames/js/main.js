@@ -139,12 +139,12 @@ $(document).ready(function(){
 
   // Refresh page on inactivity
   var currentTime = new Date().getTime();
-  $(document.body).bind("mousemove keypress", function(e) {
+  $(document.body).bind("mousemove touchmove keypress", function(e) {
     currentTime = new Date().getTime();
   });
 
   function refresh() {
-  if(new Date().getTime() - currentTime >= 45000)
+  if(new Date().getTime() - currentTime >= 120000)
     window.location.reload(true);
   else
     setTimeout(refresh, 10000);

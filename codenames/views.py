@@ -21,6 +21,8 @@ def augment_context(request):
 def index(request):
     return render(request, 'codenames/index.html')
 
+def about(request):
+    return render(request, 'codenames/about.html')
 
 def waiting(request, user_id):
     '''Sends a JsonResponse back with 'true'

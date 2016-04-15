@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^', include('registration.backends.simple.urls')),
     url(r'^profile/$', views.profile, name='profile'),
+    url(r'^about/$', views.about, name='about'),
     url(r'^guess/$', views.guess, name='guess'),
     url(r'^give/$', views.give, name='give'),
     url(r'^game/(?P<unique_id>\w+)$', views.game, name='game'),
