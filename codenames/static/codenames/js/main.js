@@ -11,16 +11,10 @@ $(document).ready(function(){
   });
   var requestUser = $('#user-info').data('request-user');
   if (requestUser != 'None') {
-    $.ajax({
-      type: 'GET',
-      url: '/waiting/' + requestUser,
-      success: function(result) {
-        if(result['waitingOnYou']) {
-          setWaiting();
-        };
-      },
-    });
-
+    // On the timer, check if they have games waiting every 15 sec
+    setInterval(function() {
+      checkWaiting(requestUser);
+    }, 15000);
   };
 
   $('#submit-pass').click(function(e) {
@@ -143,16 +137,20 @@ $(document).ready(function(){
     currentTime = new Date().getTime();
   });
 
-  function refresh() {
-  if(new Date().getTime() - currentTime >= 120000)
-    window.location.reload(true);
-  else
-    setTimeout(refresh, 10000);
-  }
-
-  setTimeout(refresh, 10000);
 });
 
+// Check if there are games waiting
+function checkWaiting(requestUser) {
+  $.ajax({
+    type: 'GET',
+    url: '/waiting/' + requestUser,
+    success: function(result) {
+      if(result['waitingOnYou']) {
+        setWaiting();
+      };
+    },
+  });
+}
 
 // Change the 'My Games' in navbar to red if user has games waiting
 function setWaiting() {
@@ -160,7 +158,10 @@ function setWaiting() {
     "border": "solid red 2px",
     "color": "red"
   });
-  $('title').prepend('(1) ');
+  var $title = $('title');
+  if ($title.text() == 'Codenames') {
+    $title.prepend('(1) ');
+  }
 }
 
 // Highlight any that have been chosen
