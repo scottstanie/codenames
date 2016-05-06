@@ -19,13 +19,11 @@ def notify(sender, **kwargs):
     url = 'http://codenames.scottstaniewicz.com/game/%s' % game.unique_id
 
     try:
-        server = smtplib.SMTP('smtp.gmail.com:587')
-        server.ehlo()
-        username = "scott.stanie@gmail.com"
+        server = smtplib.SMTP('smtp.mail.yahoo.com:587')
+        username = "axemesumpin@yahoo.com"
         password = os.environ.get('EMAIL_PASSWORD')
 
         server.starttls()
-        server.ehlo()
         server.login(username, password)
     except Exception as e:
         print "Failed to login to smtp: %s" % e
@@ -44,7 +42,7 @@ def notify(sender, **kwargs):
                 msg["Subject"] = message
                 server.sendmail(username, email_to.split(','), msg.as_string())
             except Exception as e:
-                print 'Error in slack message for %s: %s' % (email_to, e)
+                print 'Error sending message to %s: %s' % (email_to, e)
 
     else:
         email_to = game.current_player().email
