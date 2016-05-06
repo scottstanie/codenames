@@ -16,6 +16,7 @@ $(document).ready(function(){
       checkWaiting(requestUser);
     }, 15000);
   };
+  checkWaiting(requestUser);
 
   $('#submit-pass').click(function(e) {
     var $teamColor = $('#currentTeam').data('team-color');
@@ -166,6 +167,9 @@ function setWaiting() {
 
 // Highlight any that have been chosen
 function showColor(card) {
+  $(card).css({
+    "color": "white"
+  })
   $(card).css('background-color', function() {
     return $(this).data('color');
   })
