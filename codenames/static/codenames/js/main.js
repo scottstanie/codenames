@@ -11,10 +11,10 @@ $(document).ready(function(){
   });
   var requestUser = $('#user-info').data('request-user');
   if (requestUser != 'None') {
-    // On the timer, check if they have games waiting every 15 sec
+    // On the timer, check if they have games waiting every 60 sec
     setInterval(function() {
       checkWaiting(requestUser);
-    }, 15000);
+    }, 60000);
   };
   checkWaiting(requestUser);
 
