@@ -18,14 +18,18 @@ def notify(sender, **kwargs):
     users = list(game.all_players())
     url = 'http://codenames.scottstaniewicz.com/game/%s' % game.unique_id
 
-    server = smtplib.SMTP('smtp.gmail.com:587')
-    server.ehlo()
-    username = "scott.stanie@gmail.com"
-    password = os.environ.get('EMAIL_PASSWORD')
+    try:
+        server = smtplib.SMTP('smtp.gmail.com:587')
+        server.ehlo()
+        username = "scott.stanie@gmail.com"
+        password = os.environ.get('EMAIL_PASSWORD')
 
-    server.starttls()
-    server.ehlo()
-    server.login(username, password)
+        server.starttls()
+        server.ehlo()
+        server.login(username, password)
+    except Exception as e:
+        print "Failed to login to smtp: %s" % e
+
     msg = MIMEMultipart()
 
     if kwargs['created']:
