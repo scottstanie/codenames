@@ -16,7 +16,7 @@ def notify(sender, **kwargs):
         return
 
     users = list(game.all_players())
-    url = 'http://codenames.scottstaniewicz.net/game/%s' % game.unique_id
+    url = 'http://codenames.scottstaniewicz.com/game/%s' % game.unique_id
 
     server = smtplib.SMTP('smtp.gmail.com:587')
     server.ehlo()
