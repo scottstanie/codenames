@@ -36,33 +36,35 @@
     </div><!--End board -->
 
   {% endfor %}
-  <div class="inputs giving row">
-    <div class="input-group">
-      <input id="clue-text" type="text" class="form-control" placeholder="My Clue">
-      <span class="input-group-btn">
-        <button id="submit-clue" class="btn btn-default" type="button">Give clue!</button>
-      </span>
-    </div><!-- /input-group -->
-    Number of cards:
-    <select id="card-count" class="form-control">
-      <option>0</option>
-      <option>1</option>
-      <option>2</option>
-      <option>3</option>
-      <option>4</option>
-      <option>5</option>
-      <option>6</option>
-      <option>7</option>
-      <option>8</option>
-      <option>9</option>
-      <option>10</option>
-    </select>
-  </div>
-    <div class="inputs guessing row text-center" >
-      <button id="submit-guess" class="btn btn-lg">Submit Guess</button>
-      <button id="submit-pass" class="btn btn-lg">Pass</button>
+  <div class="container input-container">
+    <div class="inputs giving row">
+      Number of cards:
+      <select id="card-count" class="form-control">
+        <option>0</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+        <option>6</option>
+        <option>7</option>
+        <option>8</option>
+        <option>9</option>
+        <option>10</option>
+      </select>
+      <div class="input-group">
+        <input id="clue-text" type="text" class="form-control" placeholder="My Clue">
+        <span class="input-group-btn">
+          <button id="submit-clue" class="btn btn-default" type="button">Give clue!</button>
+        </span>
+      </div><!-- /input-group -->
     </div>
-  </div>
+      <div class="inputs guessing row text-center" >
+        <button id="submit-guess" class="btn btn-lg">Submit Guess</button>
+        <button id="submit-pass" class="btn btn-lg">Pass</button>
+      </div>
+    </div>
+  </div> <!--End input container -->
 
   <div class="row">
     <div class="col-md-5 text-center">

@@ -27,6 +27,7 @@ def notify(sender, **kwargs):
         server.login(username, password)
     except Exception as e:
         print "Failed to login to smtp: %s" % e
+        return
 
     msg = MIMEMultipart()
 
