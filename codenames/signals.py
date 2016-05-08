@@ -36,11 +36,11 @@ def notify(sender, **kwargs):
         message = "You joined {} with {}, {}, {}, and {}!".format(url, *users)
         msg.attach(MIMEText(message, 'plain'))
         try:
-            email_to = [u.email for u in users]
+            email_to = ','.join([u.email for u in users])
             msg["To"] = email_to
             msg["From"] = username
             msg["Subject"] = message
-            server.sendmail(username, email_to, msg.as_string())
+            server.sendmail(username, email_to.split(','), msg.as_string())
         except Exception as e:
             print 'Error sending message to %s: %s' % (email_to, e)
 
