@@ -35,15 +35,14 @@ def notify(sender, **kwargs):
         # New game, notify all participants
         message = "You joined {} with {}, {}, {}, and {}!".format(url, *users)
         msg.attach(MIMEText(message, 'plain'))
-        for u in users:
-            try:
-                email_to = u.email
-                msg["To"] = email_to
-                msg["From"] = username
-                msg["Subject"] = message
-                server.sendmail(username, email_to.split(','), msg.as_string())
-            except Exception as e:
-                print 'Error sending message to %s: %s' % (email_to, e)
+        try:
+            email_to = [u.email for u in users]
+            msg["To"] = email_to
+            msg["From"] = username
+            msg["Subject"] = message
+            server.sendmail(username, email_to, msg.as_string())
+        except Exception as e:
+            print 'Error sending message to %s: %s' % (email_to, e)
 
     else:
         email_to = game.current_player().email
@@ -53,8 +52,11 @@ def notify(sender, **kwargs):
             msg["To"] = email_to
             msg["From"] = username
             msg["Subject"] = message
-            server.sendmail(username, email_to.split(','), msg.as_string())
+            server.sendmail(username, [email_to], msg.as_string())
         except Exception as e:
             print "Could not email %s: %s" % (email_to, e)
 
-    server.quit()
+    try:
+        server.quit()
+    except Exception as e:
+        print "Could not quit server %s" % e
