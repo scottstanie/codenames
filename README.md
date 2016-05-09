@@ -6,6 +6,8 @@
 git clone https://github.com/scottstanie/codenames.git && cd codenames
 mkvirtualenv codenames
 pip install -r requirements.txt
+export DEBUG=True
+export SECRET_KEY=asdfjkl;
 ./manage.py runserver
 ```
 
