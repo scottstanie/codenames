@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+import random
+import string
 import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -20,11 +22,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG') or False
+
+# SECURITY WARNING: keep the secret key used in production secret!
+if DEBUG:
+    SECRET_KEY = os.environ.get('SECRET_KEY', "".join(random.choice(string.printable) for i in range(40)))
+else:
+    SECRET_KEY = 'asdfjkl;'
 
 ALLOWED_HOSTS = ['*']
 
@@ -77,7 +82,15 @@ WSGI_APPLICATION = 'codenames.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 # Parse database configuration from $DATABASE_URL
-DATABASES = {'default': dj_database_url.config()}
+if DEBUG:
+    DATABASES = {'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'codenames',
+        'HOST': 'localhost',
+        'PORT': '5432'},
+    }
+else:
+    DATABASES = {'default': dj_database_url.config()}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
