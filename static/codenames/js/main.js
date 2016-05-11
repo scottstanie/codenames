@@ -11,14 +11,17 @@ $(document).ready(function(){
   });
   var requestUser = $('#user-info').data('request-user');
   if (requestUser != 'None') {
-    // On the timer, check if they have games waiting every 15 sec
+    // On the timer, check if they have games waiting every 60 sec
     setInterval(function() {
       checkWaiting(requestUser);
-    }, 15000);
+    }, 60000);
   };
   checkWaiting(requestUser);
 
   $('#submit-pass').click(function(e) {
+    if(!confirm('Sure you want to pass?')) {
+      return false;
+    }
     var $teamColor = $('#currentTeam').data('team-color');
     var game_id = location.pathname.split('/')[2];
     var $player = $('#player').text();
@@ -39,7 +42,7 @@ $(document).ready(function(){
 
   $('#submit-guess').click(function(e) {
     var $wordChoice = $('.active.word-card');
-    if ($wordChoice.data('chosen') == "True") {
+    if ($wordChoice.data('chosen') === "True") {
       alert("Can't choose the same word twice!");
       return false;
     }
@@ -78,13 +81,18 @@ $(document).ready(function(){
 
   $("#clue-text").keyup(function(e) {
     // On hitting enter:
-    if (e.keyCode == 13) {
+    if (e.keyCode === 13) {
       $("#submit-clue").click();
     }
   });
 
   $('#submit-clue').click(function(e) {
     var $cardCount = $('#card-count').find(":selected").text();
+    if($cardCount === '0') {
+      if(!confirm('Sure you want a word 0 clue?')) {
+        return false;
+      }
+    }
     var $clueText = $('#clue-text').val();
     var $player = $('#player').text();
     if($clueText === "") {
@@ -115,7 +123,7 @@ $(document).ready(function(){
   };
 
   // For the users that are givers in this game, show all card colors
-  if (isGiver == "True") {
+  if (isGiver === "True") {
     $.map($('.word-card'), showColor);
     // Hide the guessing buttons for givers
     hideInputs(false, true);
@@ -126,7 +134,7 @@ $(document).ready(function(){
 
 
   // Once the game is over, show the color map
-  if (gameActive == "False") {
+  if (gameActive === "False") {
     $.map($('.word-card'), showColor);
     hideInputs(true, true);
   };
@@ -160,7 +168,7 @@ function setWaiting() {
     "color": "red"
   });
   var $title = $('title');
-  if ($title.text() == 'Codenames') {
+  if ($title.text() === 'Codenames') {
     $title.prepend('(1) ');
   }
 }
@@ -195,7 +203,7 @@ function getCookie(name) {
         for (var i = 0; i < cookies.length; i++) {
             var cookie = jQuery.trim(cookies[i]);
             // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                 break;
             }
