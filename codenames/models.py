@@ -47,6 +47,7 @@ class Game(models.Model):
     started_date = models.DateTimeField('date started', auto_now_add=True)
     active = models.BooleanField(default=True)
     winning_team = models.CharField(max_length=5, choices=TEAM_CHOICES, null=True)
+    word_set = models.CharField(max_length=200, default='alternate')
 
     def blue_team(self):
         return [self.blue_giver, self.blue_guesser]
