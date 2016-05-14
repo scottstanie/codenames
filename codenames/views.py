@@ -75,7 +75,7 @@ def game(request, unique_id):
 
 class GameCreate(CreateView):
     model = Game
-    fields = ['red_giver', 'red_guesser', 'blue_giver', 'blue_guesser']
+    fields = ['red_giver', 'red_guesser', 'blue_giver', 'blue_guesser', 'word_set']
 
     def form_valid(self, form):
         # TODO: check that request.user is one of the players
@@ -112,7 +112,7 @@ def generate_colors():
 def generate_board(game):
     '''Create a random new board with 25 cards,
      save the board and game'''
-    words = list(Word.objects.order_by('?')[:25])
+    words = list(Word.objects.filter(word_set=game.word_set).order_by('?')[:25])
     colors = generate_colors()
     cards = [Card(word=w, color=colors[idx], game=game) for idx, w in enumerate(words)]
     for c in cards:

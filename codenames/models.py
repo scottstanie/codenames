@@ -25,10 +25,18 @@ def _create_hash():
     return uid
 
 
+class WordSet(models.Model):
+    '''A set of words grouped together'''
+    name = models.CharField(max_length=200, default='alternate')
+
+    def __unicode__(self):
+        return self.name
+
+
 class Word(models.Model):
     '''A word can be reused across games'''
     text = models.CharField(max_length=200)
-    word_set = models.CharField(max_length=200, default='alternate')
+    word_set = models.ForeignKey(WordSet, default=1)
 
     def __unicode__(self):
         return self.text
@@ -47,7 +55,7 @@ class Game(models.Model):
     started_date = models.DateTimeField('date started', auto_now_add=True)
     active = models.BooleanField(default=True)
     winning_team = models.CharField(max_length=5, choices=TEAM_CHOICES, null=True)
-    word_set = models.CharField(max_length=200, default='alternate')
+    word_set = models.ForeignKey(WordSet, default=1)
 
     def blue_team(self):
         return [self.blue_giver, self.blue_guesser]
