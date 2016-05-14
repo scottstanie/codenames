@@ -1,5 +1,4 @@
 import hashlib
-from itertools import cycle
 import time
 from django.db import models
 from django.contrib.auth.models import User
@@ -15,9 +14,15 @@ TURN_STATES = (
 
 def _create_hash():
     """This function generate 10 character long hash"""
-    hash = hashlib.sha1()
-    hash.update(str(time.time()))
-    return hash.hexdigest()[:10]
+    hash = None
+    while not hash:
+        hash = hashlib.sha1()
+        hash.update(str(time.time()))
+        uid = hash.hexdigest()[:10]
+        if Game.objects.filter(unique_id=uid).exists():
+            hash = None
+            continue
+    return uid
 
 
 class Word(models.Model):
