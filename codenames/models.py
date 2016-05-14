@@ -28,6 +28,7 @@ def _create_hash():
 class Word(models.Model):
     '''A word can be reused across games'''
     text = models.CharField(max_length=200)
+    word_set = models.CharField(max_length=200, default='alternate')
 
     def __unicode__(self):
         return self.text
