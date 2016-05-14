@@ -29,7 +29,10 @@ def about(request):
 def waiting(request, user_id):
     '''Sends a JsonResponse back with 'true'
     if there are games waiting on this user'''
-    user = get_object_or_404(User, id=user_id)
+    if not user_id or user_id == 'None':
+        return JsonResponse({'waitingOnYou': False})
+    user = User.objects.filter(id=user_id).first()
+
     giving, guessing = find_games(user)
     waiting_on_you = find_waiting_games(user, giving, guessing)
     return JsonResponse({'waitingOnYou': waiting_on_you != []})
