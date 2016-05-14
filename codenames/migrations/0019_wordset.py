@@ -5,6 +5,14 @@ from __future__ import unicode_literals
 from django.db import migrations, models
 
 
+def load_word_set(apps, schema_editor):
+    WordSet = apps.get_model("codenames", "WordSet")
+    w1 = WordSet(name='standard')
+    w1.save()
+    w2 = WordSet(name='alternate')
+    w2.save()
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -19,4 +27,5 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(default=b'alternate', max_length=200)),
             ],
         ),
+		migrations.RunPython(load_word_set),
     ]
