@@ -48,8 +48,8 @@ def game(request, unique_id):
 
     cards = current_game.card_set.order_by('pk')
 
-    word_context = [{'id': idx, 'text': card.word.text, 'color': card.color, 'chosen': card.chosen}
-                    for idx, card in enumerate(cards)]
+    word_context = [{'id': card.word.id, 'text': card.word.text, 'color': card.color, 'chosen': card.chosen}
+                    for card in cards]
     word_rows = [word_context[i:i + 5] for i in range(0, 25, 5)]
     clues = list(current_game.clue_set.order_by('id'))
     try:
@@ -155,7 +155,7 @@ def check_game_over(game):
 
 @require_http_methods(["POST"])
 def guess(request):
-    text = request.POST['text']
+    word_id = request.POST['wordId']
     unique_id = request.POST['game_id']
     player = request.POST['player']
     clue_number = int(request.POST['clueNumber'])
@@ -164,8 +164,8 @@ def guess(request):
     user = get_object_or_404(User, username=player)
     check_double_post(game, user)
 
-    if text:
-        word = get_object_or_404(Word, text=text)
+    if word_id:
+        word = get_object_or_404(Word, id=word_id.replace('word', ''))
         card = get_object_or_404(Card, word=word, game=game)
         card.chosen = True
         card.save()
@@ -176,7 +176,7 @@ def guess(request):
     team_color = request.POST['teamColor'].split('_')[0]
     guess = Guess(user=user, guesser_team=team_color, game=game, card=card)
     guess.save()
-    if not text:
+    if not word_id:
         # User passed
         game.current_turn = find_next_turn(game)
         game.current_guess_number = 0

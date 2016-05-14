@@ -28,7 +28,7 @@ $(document).ready(function(){
     var $clueNumber = $('#clue-number').text();
     var $posting = $.post(
       '/guess/', {
-          text: null,
+          wordId: null,
           teamColor: $teamColor,
           game_id: game_id,
           player: $player,
@@ -46,14 +46,14 @@ $(document).ready(function(){
       alert("Can't choose the same word twice!");
       return false;
     }
-    var text = $wordChoice.text();
+    var wordId = $wordChoice.attr('id');
     var $teamColor = $('#currentTeam').data('team-color');
     var game_id = location.pathname.split('/')[2];
     var $player = $('#player').text();
     var $clueNumber = $('#clue-number').text();
     var $posting = $.post(
       '/guess/', {
-          text: text,
+          wordId: wordId,
           teamColor: $teamColor,
           game_id: game_id,
           player: $player,
