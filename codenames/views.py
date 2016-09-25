@@ -71,7 +71,8 @@ def game(request, unique_id):
         'players': {
             'Red Team': current_game.red_team(),
             'Blue Team': current_game.blue_team()
-        }
+        },
+        'comments': current_game.comment_set.all()
     }
     return render(request, 'codenames/game.html', context)
 
