@@ -127,3 +127,10 @@ class Clue(models.Model):
 
     def __unicode__(self):
         return '%s - %s' % (self.word, self.number)
+
+
+class Comment(models.Model):
+    text = models.TextField()
+    author = models.ForeignKey(User, default=1)
+    game = models.ForeignKey(Game, default=7)
+    time_commented = models.DateTimeField('date started', auto_now_add=True)
