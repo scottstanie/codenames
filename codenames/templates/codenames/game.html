@@ -100,7 +100,7 @@
       <div class=" col-centered detailBox">
         <div class="titleBox">
           <label>Game Comments</label>
-            <button type="button" class="close" aria-hidden="true">&times;</button>
+          <button type="button" class="close" aria-hidden="true">&times;</button>
         </div>
         <div class="commentBox">
           <p class="taskDescription">Please don't cheat.</p>
@@ -109,10 +109,13 @@
           <ul class="commentList">
             {% for comment in comments %}
             <li>
+              <button type="button" class="close removeCommentBtn" aria-hidden="true" data-comment-id="{{comment.id}}">&times;</button>
               <div class="commentText">
                 <p>
                   <strong style="color: {{comment.color}}">{{comment.author}}:</strong>
-                  {{ comment.text }}</p> <span class="date sub-text">on {{ comment.time_commented }}</span>
+                  {{ comment.text }}
+                </p>
+                  <span class="date sub-text">on {{ comment.time_commented }}</span>
               </div>
             </li>
             {% endfor %}

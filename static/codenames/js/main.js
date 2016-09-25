@@ -151,6 +151,13 @@ $(document).ready(function(){
         e.preventDefault();
         addComment();
     })
+    $('.removeCommentBtn').click(function() {
+        if(!confirm('Delete this comment?')) {
+            return false;
+        }
+        var $commentId = $(this).data('comment-id');
+        removeComment($commentId);
+    })
 
 });
 
@@ -213,6 +220,13 @@ function addComment() {
             color: $teamColor
         }
     );
+    $posting.done(function(data) {
+        window.location.reload();
+    });
+}
+
+function removeComment(commentId) {
+    var $posting = $.post('/comment/' + commentId);
     $posting.done(function(data) {
         window.location.reload();
     });

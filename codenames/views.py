@@ -276,7 +276,12 @@ def profile(request):
 
 @require_http_methods(["POST"])
 @login_required
-def comment(request):
+def comment(request, comment_id=None):
+    if comment_id:
+        comment = get_object_or_404(Comment, id=comment_id)
+        comment.delete()
+        return JsonResponse({"status": "OK"})
+
     author = request.user
     text = request.POST['text']
     unique_id = request.POST['game_id']
