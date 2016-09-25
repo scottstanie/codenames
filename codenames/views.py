@@ -10,7 +10,7 @@ from collections import Counter
 from itertools import cycle
 import random
 
-from .models import Card, Game, Word, Clue, Guess, TURN_STATES
+from .models import Card, Game, Word, Clue, Guess, Comment, TURN_STATES
 from django.contrib.auth.models import User
 
 
@@ -272,3 +272,20 @@ def profile(request):
         }
     }
     return render(request, 'codenames/profile.html', context)
+
+
+@require_http_methods(["POST"])
+@login_required
+def comment(request):
+    author = request.user
+    text = request.POST['text']
+    unique_id = request.POST['game_id']
+    color = request.POST['color'].split('_')[0]  # Remove the _give or _guess
+    game = get_object_or_404(Game, unique_id=unique_id)
+    new_comment = Comment(
+        text=text,
+        author=author,
+        game=game,
+        color=color)
+    new_comment.save()
+    return JsonResponse({"status": "OK"})

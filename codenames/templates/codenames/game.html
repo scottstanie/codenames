@@ -110,14 +110,16 @@
             {% for comment in comments %}
             <li>
               <div class="commentText">
-                <p class="">{{ comment.text }}</p> <span class="date sub-text">on {{ comment.time_commented }}</span>
+                <p>
+                  <strong style="color: {{comment.color}}">{{comment.author}}:</strong>
+                  {{ comment.text }}</p> <span class="date sub-text">on {{ comment.time_commented }}</span>
               </div>
             </li>
             {% endfor %}
           </ul>
           <form class="form-inline" role="form">
             <div class="form-group">
-              <input class="form-control" type="text" placeholder="Your comments" />
+              <input id="commentText" class="form-control" type="text" placeholder="Your comments" />
             </div>
             <div class="form-group">
               <button id="addCommentBtn" class="btn btn-default">Add</button>

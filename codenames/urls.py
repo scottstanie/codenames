@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^about/$', views.about, name='about'),
     url(r'^guess/$', views.guess, name='guess'),
     url(r'^give/$', views.give, name='give'),
+    url(r'^comment/$', views.comment, name='comment'),
     url(r'^game/(?P<unique_id>\w+)$', views.game, name='game'),
     url(r'^waiting/(?P<user_id>\w+)$', views.waiting, name='waiting'),
     url(r'^create/$',

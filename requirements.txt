@@ -8,6 +8,7 @@ email==4.0.2
 gunicorn==19.4.5
 haikunator==1.0.1
 psycopg2==2.6.1
+pytz
 raven==5.12.0
 requests==2.9.1
 six==1.10.0

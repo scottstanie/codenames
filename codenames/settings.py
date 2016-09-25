@@ -11,8 +11,6 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
-import random
-import string
 import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -27,7 +25,7 @@ DEBUG = os.environ.get('DEBUG') or False
 
 # SECURITY WARNING: keep the secret key used in production secret!
 if DEBUG:
-    SECRET_KEY = os.environ.get('SECRET_KEY', "".join(random.choice(string.printable) for i in range(40)))
+    SECRET_KEY = os.environ.get('SECRET_KEY', "asne4zs=zy!cotslx96-j-$4yy0hz87rqh44+rwih$_e6jq7h+fafd")
 else:
     SECRET_KEY = 'asdfjkl;'
 

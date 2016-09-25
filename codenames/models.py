@@ -133,4 +133,12 @@ class Comment(models.Model):
     text = models.TextField()
     author = models.ForeignKey(User, default=1)
     game = models.ForeignKey(Game, default=7)
+    color = models.CharField(
+        max_length=5,
+        choices=COLOR_CHOICES,
+        default='grey'
+    )
     time_commented = models.DateTimeField('date started', auto_now_add=True)
+
+    def __unicode__(self):
+        return '%s: %s' % (self.author, self.text)

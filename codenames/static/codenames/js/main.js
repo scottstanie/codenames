@@ -146,6 +146,12 @@ $(document).ready(function(){
         currentTime = new Date().getTime();
     });
 
+    // Add comment
+    $('#addCommentBtn').click(function(e) {
+        e.preventDefault();
+        addComment();
+    })
+
 });
 
 // Check if there are games waiting
@@ -197,26 +203,18 @@ function hideInputs(giving, guessing) {
 }
 
 function addComment() {
-     $('#submit-pass').click(function(e) {
-        if(!confirm('Sure you want to pass?')) {
-            return false;
+    var game_id = location.pathname.split('/')[2];
+    var $commentText = $('#commentText').val();
+    var $teamColor = $('#currentTeam').data('team-color');
+    var $posting = $.post(
+        '/comment/', {
+            game_id: game_id,
+            text: $commentText,
+            color: $teamColor
         }
-        var $teamColor = $('#currentTeam').data('team-color');
-        var game_id = location.pathname.split('/')[2];
-        var $player = $('#player').text();
-        var $clueNumber = $('#clue-number').text();
-        var $posting = $.post(
-            '/guess/', {
-                    wordId: null,
-                    teamColor: $teamColor,
-                    game_id: game_id,
-                    player: $player,
-                    clueNumber: $clueNumber,
-            }
-        );
-        $posting.done(function(data) {
-            window.location.reload();
-        });
+    );
+    $posting.done(function(data) {
+        window.location.reload();
     });
 }
 
