@@ -5,7 +5,7 @@ Django==1.9.5
 django-extensions==1.6.1
 django-registration==2.0.4
 email==4.0.2
-gunicorn==19.4.5
+gunicorn>=19.5.0
 haikunator==1.0.1
 psycopg2==2.6.1
 pytz
