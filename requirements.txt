@@ -1,7 +1,7 @@
 contextlib2==0.5.1
 dj-database-url==0.4.1
 dj-static==0.0.6
-Django==1.9.5
+Django==1.11.28
 django-extensions==1.6.1
 django-registration==2.0.4
 email==4.0.2
