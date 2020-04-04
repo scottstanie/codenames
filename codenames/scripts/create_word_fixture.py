@@ -9,7 +9,7 @@ import sys
 import json
 
 if len(sys.argv) < 3:
-    print("Usage: python create_word_fixture WORD_FILE.TXT MY_WORD_SET")
+    print("Usage: python create_word_fixture WORD_FILE.TXT MY_WORD_SET_ID")
     sys.exit(1)
 
 word_file = sys.argv[1]
