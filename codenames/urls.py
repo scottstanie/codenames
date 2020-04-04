@@ -13,7 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
+from django.urls import include, path
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
@@ -22,20 +22,27 @@ from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
-    url(r'^admin/', admin.site.urls),
-    url(r'^logout/$', auth_views.LogoutView, {'next_page': '/'}, name='logout'),
-    url(r'^login/$', auth_views.LoginView, name='login'),
-    url(r'^', include('django_registration.backends.one_step.urls')),
-    url(r'^profile/$', views.profile, name='profile'),
-    url(r'^about/$', views.about, name='about'),
-    url(r'^guess/$', views.guess, name='guess'),
-    url(r'^give/$', views.give, name='give'),
-    url(r'^comment/$', views.comment, name='comment'),
-    url(r'^comment/(?P<comment_id>\d+)$', views.comment, name='comment'),
-    url(r'^game/(?P<unique_id>\w+)$', views.game, name='game'),
-    url(r'^waiting/(?P<user_id>\w+)$', views.waiting, name='waiting'),
-    url(r'^create/$', login_required(views.GameCreate.as_view()), name='create'),
+    path('', views.index, name='index'),
+    path('admin/', admin.site.urls),
+    path('logout/', auth_views.LogoutView.as_view(), {'next_page': '/'}, name='logout'),
+    path('login/',
+         auth_views.LoginView.as_view(template_name='django_registration/login.html'),
+         name='login'),
+    path('', include('django_registration.backends.one_step.urls')),
+    # path('accounts/', include('django_registration.backends.one_step.urls')),
+    # path('accounts/', include('django.contrib.auth.urls')),
+    path('profile/', views.profile, name='profile'),
+    path('about/', views.about, name='about'),
+    path('guess/', views.guess, name='guess'),
+    path('give/', views.give, name='give'),
+    path('comment/', views.comment, name='comment'),
+    # url(r'^comment/(?P<comment_id>\d+)$', views.comment, name='comment'),
+    path('comment/<int:comment_id>', views.comment, name='comment'),
+    # url(r'^game/(?P<unique_id>\w+)$', views.game, name='game'),
+    path('game/<str:unique_id>', views.game, name='game'),
+    # url(r'^waiting/(?P<user_id>\w+)$', views.waiting, name='waiting'),
+    path('waiting/<str:user_id>', views.waiting, name='waiting'),
+    path('create/', login_required(views.GameCreate.as_view()), name='create'),
 ]
 #     url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
 #         ('document_root', settings.STATIC_ROOT)),

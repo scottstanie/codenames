@@ -8,7 +8,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.stdout.write(self.style.WARNING('Are you sure you wish to migrate the DB (Y/n)?'), ending=' ')
-        response_migrate = raw_input().lower()
+        response_migrate = input().lower()
         if response_migrate == 'n':
             self.stdout.write(self.style.WARNING("...CANCELLED.\n"))
         else:

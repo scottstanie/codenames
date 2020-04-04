@@ -31,7 +31,7 @@ Then run the migrations to set up the database:
 To load the words being used:
 
 ```bash
-./manage.py loaddata codenames/data/word_fixture.json
+./manage.py loaddata codenames/data/standard_word_fixture.json
 ```
 
 Now the `./manage.py runserver` should work. You will still need to make some users, so you should probably make yourself as a superuser:

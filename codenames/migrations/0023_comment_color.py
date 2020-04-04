@@ -15,6 +15,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='comment',
             name='color',
-            field=models.CharField(choices=[(b'red', b'red'), (b'blue', b'blue'), (b'grey', b'grey'), (b'black', b'black')], default=b'grey', max_length=5),
+            field=models.CharField(choices=[(b'red', b'red'), (b'blue', b'blue'),
+                                            (b'grey', b'grey'), (b'black', b'black')],
+                                   default=b'grey',
+                                   max_length=100),
         ),
     ]

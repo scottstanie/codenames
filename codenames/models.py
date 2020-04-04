@@ -27,8 +27,11 @@ class WordSet(models.Model):
     '''A set of words grouped together'''
     name = models.CharField(max_length=200, default='alternate')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
+
+    def __unicode__(self):
+        return self.__str__()
 
 
 class Word(models.Model):
@@ -36,8 +39,11 @@ class Word(models.Model):
     text = models.CharField(max_length=200)
     word_set = models.ForeignKey(WordSet, models.CASCADE, default=1)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.text
+
+    def __unicode__(self):
+        return self.__str__()
 
 
 class Game(models.Model):
@@ -52,7 +58,7 @@ class Game(models.Model):
     blue_remaining = models.IntegerField(default=9)
     started_date = models.DateTimeField('date started', auto_now_add=True)
     active = models.BooleanField(default=True)
-    winning_team = models.CharField(max_length=5, choices=TEAM_CHOICES, null=True)
+    winning_team = models.CharField(max_length=50, choices=TEAM_CHOICES, null=True)
     word_set = models.ForeignKey(WordSet, models.CASCADE, default=1)
 
     def blue_team(self):
@@ -82,6 +88,9 @@ class Game(models.Model):
                 (self.unique_id, self.red_remaining, self.blue_remaining)
 
     def __unicode__(self):
+        return self.__str__()
+
+    def __str__(self):
         return self.unique_id
 
 
@@ -89,28 +98,34 @@ class Card(models.Model):
     '''A Card is specific to one game'''
     word = models.ForeignKey(Word, models.CASCADE)
     chosen = models.BooleanField(default=False)
-    color = models.CharField(max_length=5, choices=COLOR_CHOICES, default='grey')
+    color = models.CharField(max_length=50, choices=COLOR_CHOICES, default='grey')
     game = models.ForeignKey(Game, models.CASCADE, default=7)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s: %s' % (str(self.word), self.color)
+
+    def __unicode__(self):
+        return self.__str__()
 
 
 class Guess(models.Model):
     user = models.ForeignKey(User, models.CASCADE)
-    guesser_team = models.CharField(max_length=5, choices=TEAM_CHOICES, default='red')
+    guesser_team = models.CharField(max_length=50, choices=TEAM_CHOICES, default='red')
     game = models.ForeignKey(Game, models.CASCADE, default=7)
     card = models.OneToOneField(Card, models.CASCADE, null=True)
 
     def is_wrong(self):
         return self.card.color != self.guesser_team
 
-    def __unicode__(self):
+    def __str__(self):
         if self.card is None:
             string = "Pass by %s on %s" % (self.user, self.guesser_team)
         else:
             string = '"%s" guessed by %s on %s' % (self.card, self.user, self.guesser_team)
         return string
+
+    def __unicode__(self):
+        return self.__str__()
 
 
 class Clue(models.Model):
@@ -119,16 +134,22 @@ class Clue(models.Model):
     giver = models.ForeignKey(User, models.CASCADE, default=1)
     game = models.ForeignKey(Game, models.CASCADE, default=7)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s - %s' % (self.word, self.number)
+
+    def __unicode__(self):
+        return self.__str__()
 
 
 class Comment(models.Model):
     text = models.TextField()
     author = models.ForeignKey(User, models.CASCADE, default=1)
     game = models.ForeignKey(Game, models.CASCADE, default=7)
-    color = models.CharField(max_length=5, choices=COLOR_CHOICES, default='grey')
+    color = models.CharField(max_length=50, choices=COLOR_CHOICES, default='grey')
     time_commented = models.DateTimeField('date started', auto_now_add=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s: %s' % (self.author, self.text)
+
+    def __unicode__(self):
+        return self.__str__()

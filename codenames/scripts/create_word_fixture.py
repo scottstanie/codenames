@@ -16,9 +16,15 @@ word_file = sys.argv[1]
 word_set = sys.argv[2]
 fixtures = []
 
-with open(word_file, 'rb') as f:
+with open(word_file, 'r') as f:
     for line in f:
         word = line.strip('\n')
-        fixtures.append({"fields": {"text": word, "word_set": word_set}, "model": "codenames.word"})
+        fixtures.append({
+            "fields": {
+                "text": word,
+                "word_set": word_set
+            },
+            "model": "codenames.word",
+        })
 
 print(json.dumps(fixtures))
