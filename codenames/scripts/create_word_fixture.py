@@ -9,7 +9,7 @@ import sys
 import json
 
 if len(sys.argv) < 3:
-    print "Usage: python create_word_fixture WORD_FILE.TXT MY_WORD_SET"
+    print("Usage: python create_word_fixture WORD_FILE.TXT MY_WORD_SET")
     sys.exit(1)
 
 word_file = sys.argv[1]
@@ -21,4 +21,4 @@ with open(word_file, 'rb') as f:
         word = line.strip('\n')
         fixtures.append({"fields": {"text": word, "word_set": word_set}, "model": "codenames.word"})
 
-print json.dumps(fixtures)
+print(json.dumps(fixtures))
