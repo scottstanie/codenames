@@ -19,15 +19,17 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.conf.urls.static import static
+from django_registration.backends.one_step.views import RegistrationView
 from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
     path('admin/', admin.site.urls),
-    path('logout/', auth_views.LogoutView.as_view(), {'next_page': '/'}, name='logout'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
     path('login/',
          auth_views.LoginView.as_view(template_name='django_registration/login.html'),
          name='login'),
+    path('register/', RegistrationView.as_view(success_url='/')),
     path('', include('django_registration.backends.one_step.urls')),
     # path('accounts/', include('django_registration.backends.one_step.urls')),
     # path('accounts/', include('django.contrib.auth.urls')),
