@@ -58,7 +58,7 @@ class Game(models.Model):
     blue_remaining = models.IntegerField(default=9)
     started_date = models.DateTimeField('date started', auto_now_add=True)
     active = models.BooleanField(default=True)
-    winning_team = models.CharField(max_length=50, choices=TEAM_CHOICES, null=True)
+    winning_team = models.CharField(max_length=50, choices=TEAM_CHOICES, blank=True, null=True)
     word_set = models.ForeignKey(WordSet, models.CASCADE, default=1)
 
     def blue_team(self):
