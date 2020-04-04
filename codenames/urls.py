@@ -43,7 +43,7 @@ urlpatterns = [
     # url(r'^waiting/(?P<user_id>\w+)$', views.waiting, name='waiting'),
     path('waiting/<str:user_id>', views.waiting, name='waiting'),
     path('create/', login_required(views.GameCreate.as_view()), name='create'),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 #     url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
 #         ('document_root', settings.STATIC_ROOT)),
 # ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
