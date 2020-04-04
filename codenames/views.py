@@ -106,9 +106,9 @@ def generate_colors():
     counters = {'red': red_count, 'blue': blue_count, 'grey': grey_count, 'black': black_count}
 
     colors = []
-    while sum(counters.itervalues()) > 0:
-        available_colors = {k: v for k, v in counters.iteritems() if v > 0}
-        color = random.choice(available_colors.keys())
+    while sum(counters.values()) > 0:
+        available_colors = {k: v for k, v in counters.items() if v > 0}
+        color = random.choice(list(available_colors.keys()))
         counters[color] -= 1
         colors.append(color)
 
@@ -134,10 +134,10 @@ def generate_board(game):
 
 def find_next_turn(game):
     turn_cycle = cycle(t[0] for t in TURN_STATES)
-    t = turn_cycle.next()
+    t = next(turn_cycle)
     while t != game.current_turn:
-        t = turn_cycle.next()
-    return turn_cycle.next()
+        t = next(turn_cycle)
+    return next(turn_cycle)
 
 
 def decrement_card_counter(game, card_color):
