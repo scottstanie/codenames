@@ -1,6 +1,5 @@
 contextlib2
 dj-database-url
-dj-static
 Django
 django-extensions
 django-registration

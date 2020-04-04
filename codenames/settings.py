@@ -16,7 +16,6 @@ import dj_database_url
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
@@ -25,7 +24,8 @@ DEBUG = os.environ.get('DEBUG') or False
 
 # SECURITY WARNING: keep the secret key used in production secret!
 if DEBUG is False:
-    SECRET_KEY = os.environ.get('SECRET_KEY', "asne4zs=zy!cotslx96-j-$4yy0hz87rqh44+rwih$_e6jq7h+fafd")
+    SECRET_KEY = os.environ.get('SECRET_KEY',
+                                "asne4zs=zy!cotslx96-j-$4yy0hz87rqh44+rwih$_e6jq7h+fafd")
 else:
     SECRET_KEY = 'asdfjkl;'
 
@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'codenames.apps.CodenamesConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,9 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
-
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -76,16 +77,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'codenames.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 # Parse database configuration from $DATABASE_URL
 if DEBUG:
-    DATABASES = {'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'codenames',
-        'HOST': 'localhost',
-        'PORT': '5432'},
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'codenames',
+            'HOST': 'localhost',
+            'PORT': '5432'
+        },
     }
 else:
     DATABASES = {'default': dj_database_url.config()}
@@ -108,7 +110,6 @@ AUTH_PASSWORD_VALIDATORS = [
     # },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
@@ -122,18 +123,19 @@ USE_L10N = True
 
 USE_TZ = True
 
+# http://whitenoise.evans.io/en/stable/
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.9/howto/static-files/
+# https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
 
-if DEBUG is False:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-else:
-    STATICFILES_DIRS = (
-        os.path.join(BASE_DIR, 'static'),
-    )
+# if DEBUG is False:
+#     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# else:
+#     STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login/'
