@@ -15,7 +15,7 @@ def _create_hash():
     hash = None
     while not hash:
         hash = hashlib.sha1()
-        hash.update(str(time.time()))
+        hash.update(str(time.time()).encode('utf-8'))
         uid = hash.hexdigest()[:10]
         if Game.objects.filter(unique_id=uid).exists():
             hash = None
