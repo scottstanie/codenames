@@ -19,14 +19,14 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.conf.urls.static import static
-import views
+from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^admin/', admin.site.urls),
-    url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'),
-    url(r'^login/$', auth_views.login, name='login'),
-    url(r'^', include('registration.backends.simple.urls')),
+    url(r'^logout/$', auth_views.LogoutView, {'next_page': '/'}, name='logout'),
+    url(r'^login/$', auth_views.LoginView, name='login'),
+    url(r'^', include('django_registration.backends.one_step.urls')),
     url(r'^profile/$', views.profile, name='profile'),
     url(r'^about/$', views.about, name='about'),
     url(r'^guess/$', views.guess, name='guess'),
@@ -35,10 +35,7 @@ urlpatterns = [
     url(r'^comment/(?P<comment_id>\d+)$', views.comment, name='comment'),
     url(r'^game/(?P<unique_id>\w+)$', views.game, name='game'),
     url(r'^waiting/(?P<user_id>\w+)$', views.waiting, name='waiting'),
-    url(r'^create/$',
-        login_required(views.GameCreate.as_view()),
-        name='create'),
+    url(r'^create/$', login_required(views.GameCreate.as_view()), name='create'),
     url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root', settings.STATIC_ROOT}
-    ),
+        ('document_root', settings.STATIC_ROOT)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

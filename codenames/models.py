@@ -6,10 +6,8 @@ from django.contrib.auth.models import User
 
 COLOR_CHOICES = (('red', 'red'), ('blue', 'blue'), ('grey', 'grey'), ('black', 'black'))
 TEAM_CHOICES = (('red', 'red'), ('blue', 'blue'))
-TURN_STATES = (
-    ('blue_give', 'Blue Team to give clue'), ('blue_guess', 'Blue Team to guess'),
-    ('red_give', 'Red Team to give clue'), ('red_guess', 'Red Team to guess')
-)
+TURN_STATES = (('blue_give', 'Blue Team to give clue'), ('blue_guess', 'Blue Team to guess'),
+               ('red_give', 'Red Team to give clue'), ('red_guess', 'Red Team to guess'))
 
 
 def _create_hash():
@@ -36,7 +34,7 @@ class WordSet(models.Model):
 class Word(models.Model):
     '''A word can be reused across games'''
     text = models.CharField(max_length=200)
-    word_set = models.ForeignKey(WordSet, default=1)
+    word_set = models.ForeignKey(WordSet, models.CASCADE, default=1)
 
     def __unicode__(self):
         return self.text
@@ -44,10 +42,10 @@ class Word(models.Model):
 
 class Game(models.Model):
     unique_id = models.CharField(max_length=10, default=_create_hash, unique=True)
-    red_giver = models.ForeignKey(User, related_name='red_giver', default=1)
-    red_guesser = models.ForeignKey(User, related_name='red_guesser', default=1)
-    blue_giver = models.ForeignKey(User, related_name='blue_giver', default=1)
-    blue_guesser = models.ForeignKey(User, related_name='blue_guesser', default=1)
+    red_giver = models.ForeignKey(User, models.CASCADE, related_name='red_giver', default=1)
+    red_guesser = models.ForeignKey(User, models.CASCADE, related_name='red_guesser', default=1)
+    blue_giver = models.ForeignKey(User, models.CASCADE, related_name='blue_giver', default=1)
+    blue_guesser = models.ForeignKey(User, models.CASCADE, related_name='blue_guesser', default=1)
     current_turn = models.CharField(max_length=16, choices=TURN_STATES, default='red_give')
     current_guess_number = models.IntegerField(default=0)
     red_remaining = models.IntegerField(default=9)
@@ -55,7 +53,7 @@ class Game(models.Model):
     started_date = models.DateTimeField('date started', auto_now_add=True)
     active = models.BooleanField(default=True)
     winning_team = models.CharField(max_length=5, choices=TEAM_CHOICES, null=True)
-    word_set = models.ForeignKey(WordSet, default=1)
+    word_set = models.ForeignKey(WordSet, models.CASCADE, default=1)
 
     def blue_team(self):
         return [self.blue_giver, self.blue_guesser]
@@ -89,24 +87,20 @@ class Game(models.Model):
 
 class Card(models.Model):
     '''A Card is specific to one game'''
-    word = models.ForeignKey(Word)
+    word = models.ForeignKey(Word, models.CASCADE)
     chosen = models.BooleanField(default=False)
-    color = models.CharField(
-        max_length=5,
-        choices=COLOR_CHOICES,
-        default='grey'
-    )
-    game = models.ForeignKey(Game, default=7)
+    color = models.CharField(max_length=5, choices=COLOR_CHOICES, default='grey')
+    game = models.ForeignKey(Game, models.CASCADE, default=7)
 
     def __unicode__(self):
         return '%s: %s' % (str(self.word), self.color)
 
 
 class Guess(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, models.CASCADE)
     guesser_team = models.CharField(max_length=5, choices=TEAM_CHOICES, default='red')
-    game = models.ForeignKey(Game, default=7)
-    card = models.OneToOneField(Card, null=True)
+    game = models.ForeignKey(Game, models.CASCADE, default=7)
+    card = models.OneToOneField(Card, models.CASCADE, null=True)
 
     def is_wrong(self):
         return self.card.color != self.guesser_team
@@ -122,8 +116,8 @@ class Guess(models.Model):
 class Clue(models.Model):
     word = models.CharField(max_length=96)
     number = models.IntegerField(default=1)
-    giver = models.ForeignKey(User, default=1)
-    game = models.ForeignKey(Game, default=7)
+    giver = models.ForeignKey(User, models.CASCADE, default=1)
+    game = models.ForeignKey(Game, models.CASCADE, default=7)
 
     def __unicode__(self):
         return '%s - %s' % (self.word, self.number)
@@ -131,13 +125,9 @@ class Clue(models.Model):
 
 class Comment(models.Model):
     text = models.TextField()
-    author = models.ForeignKey(User, default=1)
-    game = models.ForeignKey(Game, default=7)
-    color = models.CharField(
-        max_length=5,
-        choices=COLOR_CHOICES,
-        default='grey'
-    )
+    author = models.ForeignKey(User, models.CASCADE, default=1)
+    game = models.ForeignKey(Game, models.CASCADE, default=7)
+    color = models.CharField(max_length=5, choices=COLOR_CHOICES, default='grey')
     time_commented = models.DateTimeField('date started', auto_now_add=True)
 
     def __unicode__(self):

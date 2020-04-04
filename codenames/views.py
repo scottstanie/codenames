@@ -1,10 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, JsonResponse
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView
 from django.views.decorators.http import require_http_methods
-
 
 from collections import Counter
 from itertools import cycle
@@ -48,8 +47,12 @@ def game(request, unique_id):
 
     cards = current_game.card_set.order_by('pk')
 
-    word_context = [{'id': card.word.id, 'text': card.word.text, 'color': card.color, 'chosen': card.chosen}
-                    for card in cards]
+    word_context = [{
+        'id': card.word.id,
+        'text': card.word.text,
+        'color': card.color,
+        'chosen': card.chosen
+    } for card in cards]
     word_rows = [word_context[i:i + 5] for i in range(0, 25, 5)]
     clues = list(current_game.clue_set.order_by('id'))
     try:
@@ -100,8 +103,7 @@ def generate_colors():
     red_count, blue_count = rb_counts
     grey_count, black_count = 7, 1
 
-    counters = {'red': red_count, 'blue': blue_count,
-                'grey': grey_count, 'black': black_count}
+    counters = {'red': red_count, 'blue': blue_count, 'grey': grey_count, 'black': black_count}
 
     colors = []
     while sum(counters.itervalues()) > 0:
@@ -182,9 +184,7 @@ def guess(request):
         game.current_turn = find_next_turn(game)
         game.current_guess_number = 0
         game.save()
-        return HttpResponseRedirect(
-            reverse('game',
-                    args=(unique_id,)))
+        return HttpResponseRedirect(reverse('game', args=(unique_id, )))
     else:
         game.current_guess_number += 1
 
@@ -204,9 +204,7 @@ def guess(request):
     check_game_over(game)
 
     game.save()
-    return HttpResponseRedirect(
-            reverse('game',
-                    args=(unique_id,)))
+    return HttpResponseRedirect(reverse('game', args=(unique_id, )))
 
 
 def check_double_post(game, user):
@@ -223,14 +221,14 @@ def give(request):
     user = get_object_or_404(User, username=player)
     if check_double_post(game, user):
         # Player has already given clue, probably a double post
-        return HttpResponseRedirect(reverse('game', args=(game.unique_id,)))
+        return HttpResponseRedirect(reverse('game', args=(game.unique_id, )))
 
     count = request.POST['count']
     clue = Clue(word=text, number=count, giver=user, game=game)
     clue.save()
     game.current_turn = find_next_turn(game)
     game.save()
-    return HttpResponseRedirect(reverse('game', args=(unique_id,)))
+    return HttpResponseRedirect(reverse('game', args=(unique_id, )))
 
 
 def find_games(user):
@@ -241,14 +239,15 @@ def find_games(user):
     red_guessers = list(Game.objects.filter(red_guesser=user))
     blue_guessers = list(Game.objects.filter(blue_guesser=user))
     giving = sorted(list(set(red_givers + blue_givers)), key=lambda g: g.started_date, reverse=True)
-    guessing = sorted(list(set(red_guessers + blue_guessers)), key=lambda g: g.started_date, reverse=True)
+    guessing = sorted(list(set(red_guessers + blue_guessers)),
+                      key=lambda g: g.started_date,
+                      reverse=True)
     return giving, guessing
 
 
 def find_waiting_games(user, giving, guessing):
     '''Return the list of games that are waiting on the given user'''
-    return [g for g in (giving + guessing)
-            if g.current_player().id == user.id and g.active is True]
+    return [g for g in (giving + guessing) if g.current_player().id == user.id and g.active is True]
 
 
 @login_required
@@ -287,10 +286,6 @@ def comment(request, comment_id=None):
     unique_id = request.POST['game_id']
     color = request.POST['color'].split('_')[0]  # Remove the _give or _guess
     game = get_object_or_404(Game, unique_id=unique_id)
-    new_comment = Comment(
-        text=text,
-        author=author,
-        game=game,
-        color=color)
+    new_comment = Comment(text=text, author=author, game=game, color=color)
     new_comment.save()
     return JsonResponse({"status": "OK"})
