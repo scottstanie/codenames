@@ -26,7 +26,7 @@ def notify(sender, **kwargs):
         server.starttls()
         server.login(username, password)
     except Exception as e:
-        print "Failed to login to smtp: %s" % e
+        print("Failed to login to smtp: %s" % e)
         return
 
     msg = MIMEMultipart()
@@ -42,7 +42,7 @@ def notify(sender, **kwargs):
             msg["Subject"] = message
             server.sendmail(username, email_to.split(','), msg.as_string())
         except Exception as e:
-            print 'Error sending message to %s: %s' % (email_to, e)
+            print('Error sending message to %s: %s' % (email_to, e))
 
     else:
         email_to = game.current_player().email
@@ -54,9 +54,9 @@ def notify(sender, **kwargs):
             msg["Subject"] = message
             server.sendmail(username, [email_to], msg.as_string())
         except Exception as e:
-            print "Could not email %s: %s" % (email_to, e)
+            print("Could not email %s: %s" % (email_to, e))
 
     try:
         server.quit()
     except Exception as e:
-        print "Could not quit server %s" % e
+        print("Could not quit server %s" % e)
